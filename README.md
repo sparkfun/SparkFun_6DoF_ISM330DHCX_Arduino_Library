@@ -1,9 +1,9 @@
 # SparkFun_6DoF_ISM330DHCX_Arduino_Library
 ========================================
 
-[![SparkFun Part Name](URL for picture of part)](URL for product on Sparkfun.com)
+[![SparkFun Qwiic 6DoF - ISM330DHCX](URL for picture of part)](https://www.sparkfun.com/products/19764)
 
-[*SparkFun Part Name (SKU)*](URL for product on Sparkfun.com)
+[*SparkFun Qwiic 6DoF - ISM330DHCX (19764)*](https://www.sparkfun.com/products/19764)
 
 <Basic description of the part.>
 
