@@ -67,7 +67,7 @@ public:
     bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data);
 
     // Write a block of bytes to the device --
-    int writeRegisterRegion(uint8_t address, uint8_t offset, uint8_t* data, uint16_t length);
+    int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length);
 
     int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
 

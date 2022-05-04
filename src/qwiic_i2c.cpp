@@ -136,7 +136,7 @@ bool QwI2C::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataT
 //
 // Write a block of data to a device.
 
-int QwI2C::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, uint8_t *data, uint16_t length)
+int QwI2C::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
 {
 
     // Note:
