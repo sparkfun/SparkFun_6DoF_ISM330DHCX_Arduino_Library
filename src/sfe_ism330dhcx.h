@@ -53,23 +53,11 @@ class QwDevISM330DHCX
     void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
 
 
-    //////////////////////////////////////////////////////////////////////////////////
-    // setCommunicationBus()
-    //
-    // Called to set the Communication Bus object to use
-    //
-    //  Parameter    Description
-    //  ---------    -----------------------------
-    //  theBus       The Bus object to use
-    //  idBus        The bus ID for the target device.
-    //
-
-    void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
-
-
 	private: 
 
+		bool _isInitialized;
 		QwI2C *_i2cBus; 
+		uint8_t _i2cAddress;
 };
 
 

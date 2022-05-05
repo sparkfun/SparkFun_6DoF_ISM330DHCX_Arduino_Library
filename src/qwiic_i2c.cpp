@@ -54,10 +54,8 @@
 //#elif defined(BUFFER_LENGTH)
 //#define kMaxTransferBuffer BUFFER_LENGTH
 
-#else // just the standard Arduino value
 #define kMaxTransferBuffer 32
 
-#endif
 
 // What we use for transfer chunk size
 

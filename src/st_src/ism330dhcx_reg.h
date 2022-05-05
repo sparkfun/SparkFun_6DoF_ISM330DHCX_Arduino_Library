@@ -51,8 +51,8 @@ extern "C" {
 /** if _BYTE_ORDER is not defined, choose the endianness of your architecture
   * by uncommenting the define which fits your platform endianness
   */
-//#define DRV_BYTE_ORDER    DRV_BIG_ENDIAN
-#define DRV_BYTE_ORDER    DRV_LITTLE_ENDIAN
+#define DRV_BYTE_ORDER    DRV_BIG_ENDIAN
+//#define DRV_BYTE_ORDER    DRV_LITTLE_ENDIAN
 
 #else /* defined __BYTE_ORDER__ */
 
