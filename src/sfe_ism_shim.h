@@ -6,8 +6,8 @@ extern "C"{
 #endif
 
 
-int32_t sfe_ism_write(void* fTarget, uint8_t Reg, const uint8_t *Bufp, uint16_t len);
-int32_t sfe_ism_read(void* fTarget, uint8_t Reg, uint8_t *Bufp, uint16_t len);
+int32_t sfe_ism_write(void* fTarget, uint8_t reg, const uint8_t *bufp, uint16_t len);
+int32_t sfe_ism_read(void* fTarget, uint8_t reg, uint8_t *bufp, uint16_t len);
 
 extern stmdev_ctx_t sfe_dev; 
 

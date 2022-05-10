@@ -6,14 +6,14 @@
 stmdev_ctx_t sfe_dev = {.write_reg = sfe_ism_write, 
 												.read_reg = sfe_ism_read };
 
-int32_t sfe_ism_write(void* fTarget, uint8_t Reg, const uint8_t *Bufp, uint16_t len)
+int32_t sfe_ism_write(void* fTarget, uint8_t reg, const uint8_t *bufp, uint16_t len)
 {
-	return ((QwDevISM330DHCX*)fTarget->writeRegisterRegion(Reg,*Bufp, len));
+	return (((QwDevISM330DHCX*)fTarget)->writeRegisterRegion(reg, (uint8_t*)bufp, len));
 }
 
-int32_t sfe_ism_read(void* fTarget, uint8_t Reg, uint8_t *Bufp, uint16_t len)
+int32_t sfe_ism_read(void* fTarget, uint8_t reg, uint8_t *bufp, uint16_t len)
 {
-    return ((QwDevISM330DHCX*)fTarget->readRegisterRegion(Reg, *Bufp, len));
+    return (((QwDevISM330DHCX*)fTarget)->readRegisterRegion(reg, bufp, len));
 }
 
 
