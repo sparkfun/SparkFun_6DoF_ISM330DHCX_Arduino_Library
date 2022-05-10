@@ -1,6 +1,8 @@
 #include "qwiic_i2c.h"
 
 
+#define ISM330DHCX_ADDRESS_LOW 0x6A
+#define ISM330DHCX_ADDRESS_HIGH 0x6B
 
 class QwDevISM330DHCX
 {
@@ -54,7 +56,6 @@ class QwDevISM330DHCX
     //
 
     void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
-
 
 	private: 
 
