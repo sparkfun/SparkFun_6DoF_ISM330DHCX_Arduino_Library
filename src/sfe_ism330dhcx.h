@@ -60,7 +60,7 @@ class QwDevISM330DHCX
 
 		int32_t setAccelFullScale(uint8_t val);
 
-		int32_t getUniqueId(uint8_t* buff);
+		uint8_t getUniqueId();
 
 	private: 
 

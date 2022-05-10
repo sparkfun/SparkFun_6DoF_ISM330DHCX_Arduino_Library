@@ -52,9 +52,6 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
         return this->QwDevISM330DHCX::init();
     }
 
-
-		
-
 	private: 
 	
 		QwI2C _i2cBus; 

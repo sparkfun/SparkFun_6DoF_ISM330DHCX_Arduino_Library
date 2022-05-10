@@ -10,17 +10,9 @@
 
 bool QwDevISM330DHCX::init(void)
 {
-
-    if (_isInitialized)  // already init'd
-        return true;
-
     //  do we have a bus yet? is the device connected?
     if (!_i2cBus || !_i2cAddress || !_i2cBus->ping(_i2cAddress))
         return false;
-
-		// TO DO - check for WHOAMI
-	
-    _isInitialized = true;
 
     return true;
 }
@@ -72,13 +64,21 @@ int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint1
     return _i2cBus->readRegisterRegion(_i2cAddress, offset, data, length);
 }
 
-int32_t setAccelFullScale(uint8_t val){
-
+int32_t setAccelFullScale(uint8_t val)
+{
 	return (ism330dhcx_xl_full_scale_set(&sfe_dev, ism330dhcx_fs_xl_t(val)));
 }
 
-int32_t getUniqueId(uint8_t* buff){
+uint8_t QwDevISM330DHCX::getUniqueId()
+{
+
+	uint8_t* buff;
+	int32_t retVal = (ism330dhcx_device_id_get(&sfe_dev, buff));
+
+	uint8_t thisVal = *buff; 
+	if(retVal == 0)
+		return (thisVal); 
 	
-	return(ism330dhcx_device_id_get(&sfe_dev, buff));
+	return 0;
 }
 
