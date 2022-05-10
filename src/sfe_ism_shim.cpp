@@ -3,6 +3,8 @@
 #include "st_src\ism330dhcx_reg.h"
 
 
+stmdev_ctx_t sfe_dev = {.write_reg = sfe_ism_write, 
+												.read_reg = sfe_ism_read };
 
 int32_t sfe_ism_write(void* fTarget, uint8_t Reg, const uint8_t *Bufp, uint16_t len)
 {

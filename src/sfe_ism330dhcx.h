@@ -6,6 +6,9 @@ class QwDevISM330DHCX
 {
 	public: 
 
+		QwDevISM330DHCX() : _i2cBus{nullptr}, _i2cAddress{0} {};
+			
+
     ///////////////////////////////////////////////////////////////////////
     // init()
     //
