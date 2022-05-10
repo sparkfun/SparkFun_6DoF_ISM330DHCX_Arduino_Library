@@ -57,6 +57,6 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
 
 	private: 
 	
-		QwI2C _i2cBuf; 
+		QwI2C _i2cBus; 
 
-}
+};

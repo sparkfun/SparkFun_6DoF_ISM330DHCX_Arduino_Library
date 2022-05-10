@@ -1,4 +1,5 @@
 #include "qwiic_i2c.h"
+#include "sfe_ism_shim.h"
 
 
 #define ISM330DHCX_ADDRESS_LOW 0x6A
@@ -56,6 +57,10 @@ class QwDevISM330DHCX
     //
 
     void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
+
+		int32_t setAccelFullScale(uint8_t val);
+
+		int32_t getUniqueId(uint8_t* buff);
 
 	private: 
 
