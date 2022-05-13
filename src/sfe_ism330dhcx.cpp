@@ -13,6 +13,9 @@ bool QwDevISM330DHCX::init(void)
     //  do we have a bus yet? is the device connected?
     if (!_i2cBus || !_i2cAddress || !_i2cBus->ping(_i2cAddress))
         return false;
+		
+		initCtx((void*)this, &sfe_dev); 			
+		
 
     return true;
 }
@@ -66,14 +69,17 @@ int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint1
 
 int32_t setAccelFullScale(uint8_t val)
 {
-	return (ism330dhcx_xl_full_scale_set(&sfe_dev, ism330dhcx_fs_xl_t(val)));
+	//return (ism330dhcx_xl_full_scale_set(sfe_dev, ism330dhcx_fs_xl_t(val)));
 }
 
 uint8_t QwDevISM330DHCX::getUniqueId()
 {
 
 	uint8_t* buff;
+	Serial.println("Getting id.");
 	int32_t retVal = (ism330dhcx_device_id_get(&sfe_dev, buff));
+	Serial.print("Returnval: ");
+	Serial.println(retVal);
 
 	uint8_t thisVal = *buff; 
 	if(retVal == 0)

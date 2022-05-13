@@ -11396,7 +11396,7 @@ int32_t ism330dhcx_sh_status_get(stmdev_ctx_t *ctx,
   if (ret == 0)
   {
     ret = ism330dhcx_mem_bank_set(ctx, ISM330DHCX_USER_BANK);
-  }
+  }    
 
   return ret;
 }
