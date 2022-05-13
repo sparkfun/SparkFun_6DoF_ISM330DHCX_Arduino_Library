@@ -11,6 +11,8 @@ void setup(){
 	Serial.println("Hey.");
 
 	Serial.print("Did we begin: "); 
+	Wire.beginTransmission(0x6B);
+	Serial.println(Wire.endTransmission());
 	Serial.println(myISM.begin());
 
 
