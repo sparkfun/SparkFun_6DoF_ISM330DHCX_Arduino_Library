@@ -58,7 +58,8 @@ class QwDevISM330DHCX
 
     void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
 
-		int32_t setAccelFullScale(uint8_t val);
+		bool setAccelFullScale(uint8_t val);
+		uint8_t getAccelFullScale();
 
 		uint8_t getUniqueId();
 
