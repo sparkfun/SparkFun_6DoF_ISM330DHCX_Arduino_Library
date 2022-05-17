@@ -13,14 +13,13 @@ bool QwDevISM330DHCX::init(void)
     //  do we have a bus yet? is the device connected?
     if (!_i2cBus || !_i2cAddress || !_i2cBus->ping(_i2cAddress))
         return false;
+		
+		// Setup the struct needed by the C source files for reading and writing.
+		initCtx((void*)this, &sfe_dev); 			
 
 		// I2C ready, now check that we're using the correct sensor before moving on. 
 		if (getUniqueId() != ISM330DHCX_ID)
 			return false; 
-		
-		
-		// Initialize the 
-		initCtx((void*)this, &sfe_dev); 			
 		
 
     return true;
@@ -111,3 +110,16 @@ uint8_t QwDevISM330DHCX::getUniqueId()
 	return 0;
 }
 
+
+int16_t QwDevISM330DHCX::getTemp()
+{
+	
+	int16_t tempVal;	
+	int32_t retVal = ism330dhcx_temperature_raw_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return -1;
+
+	return tempVal;
+
+}

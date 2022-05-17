@@ -211,7 +211,6 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
             return -1; // error
 
         // Copy the retrieved data chunk to the current index in the data segment
-				uint8_t temp;
         for (i = 0; i < nReturned; i++){
             *data++ = _i2cPort->read();
 				}

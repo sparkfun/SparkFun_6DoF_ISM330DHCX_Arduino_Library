@@ -15,5 +15,8 @@ void setup(){
 }
 
 void loop(){
+
+	Serial.println(myISM.getTemp());
+	delay(500);
 }
 
