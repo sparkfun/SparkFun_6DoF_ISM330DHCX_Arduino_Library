@@ -17,7 +17,7 @@ void setup(){
 
 
 	Serial.print("Unique ID: ");
-	Serial.println(myISM.getUniqueId());
+	Serial.println(myISM.getUniqueId(), HEX);
 
 
 }

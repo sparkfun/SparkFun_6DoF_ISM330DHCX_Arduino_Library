@@ -75,15 +75,11 @@ int32_t setAccelFullScale(uint8_t val)
 uint8_t QwDevISM330DHCX::getUniqueId()
 {
 
-	uint8_t* buff;
-	Serial.println("Getting id.");
-	int32_t retVal = (ism330dhcx_device_id_get(&sfe_dev, buff));
-	Serial.print("Returnval: ");
-	Serial.println(retVal);
+	uint8_t buff = 0;
+	int32_t retVal = (ism330dhcx_device_id_get(&sfe_dev, &buff));
 
-	uint8_t thisVal = *buff; 
 	if(retVal == 0)
-		return (thisVal); 
+		return buff; 
 	
 	return 0;
 }

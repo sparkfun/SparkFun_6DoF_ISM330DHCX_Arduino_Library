@@ -59,7 +59,7 @@
 
 // What we use for transfer chunk size
 
-const static uint16_t kChunkSize = kMaxTransferBuffer - 2;
+const static uint16_t kChunkSize = kMaxTransferBuffer;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Constructor
@@ -174,7 +174,7 @@ int QwI2C::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_
 int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
 {
     uint8_t nChunk;
-    uint8_t nReturned;
+    uint16_t nReturned;
 
     if (!_i2cPort)
         return -1;
@@ -197,7 +197,7 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
             bFirstInter = false;
         }
 
-        if (_i2cPort->endTransmission(true) != 0)
+        if (_i2cPort->endTransmission() != 0)
             return -1; // error with the end transmission
 
         // We're chunking in data - keeping the max chunk to kMaxI2CBufferLength
@@ -211,8 +211,10 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
             return -1; // error
 
         // Copy the retrieved data chunk to the current index in the data segment
-        for (i = 0; i < nReturned; i++)
-            *data++ = _i2cPort->read();
+				uint8_t temp;
+        for (i = 0; i < nReturned; i++){
+            (*data)++ = _i2cPort->read();
+				}
 
         // Decrement the amount of data recieved from the overall data request amount
         numBytes = numBytes - nReturned;
