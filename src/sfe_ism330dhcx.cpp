@@ -123,3 +123,54 @@ int16_t QwDevISM330DHCX::getTemp()
 	return tempVal;
 
 }
+
+
+bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
+{
+	if( rate < 0 | rate > 11 )
+		return false; 
+
+	int32_t retVal = ism330dhcx_xl_data_rate_set(&sfe_dev, (ism330dhcx_odr_xl_t)rate)
+
+	if( retVal != 0)
+		return false;
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
+{
+	if( rate < 0 | rate > 10 )
+		return false;
+
+	int32_t retVal = ism330dhcx_gy_data_rate_set(&sfe_dev,(ism330dhcx_odr_g_t)rate);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+
+bool QwDevISM330DHCX::setAccelStatustoInt(bool set)
+{
+
+	ism330dhcx_int1_ctrl_t intToPin; 
+	
+	int32_t ism330dhcx_pin_int1_route_set(&sfe_dev,(ism330dhcx_int1_ctrl_t)&set);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+
+void QwDevISM330DHCX::checkStatus()
+{
+	uint8_t tempVal;
+	int32_t retVal = ism330dhcx_(&sfe_dev, &tempVal);
+
+	if( retVal != 0)
+		return -1;
+}

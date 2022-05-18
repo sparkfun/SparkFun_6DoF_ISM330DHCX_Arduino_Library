@@ -69,7 +69,6 @@ class QwDevISM330DHCX
 		QwI2C *_i2cBus; 
 		uint8_t _i2cAddress;
 		stmdev_ctx_t sfe_dev; 
-		stmdev_ctx_t* sfe_dev_ptr = &sfe_dev; 
 };
 
 
