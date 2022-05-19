@@ -2,6 +2,7 @@
 #include "SparkFun_ISM330DHCX.h"
 
 SparkFun_ISM330DHCX myISM; 
+sfe_accel_data_t myData; 
 
 void setup(){
 
@@ -12,11 +13,27 @@ void setup(){
 
 	Serial.print("Did we begin: "); 
 	Serial.println(myISM.begin());
+
+	//set ODR
+
+	myISM.setAccelDataRate(6);
 }
 
 void loop(){
 
-	Serial.println(myISM.getTemp());
-	delay(500);
+	if( myISM.checkAccelStatus() ){
+		myData = myISM.getAccel();
+		Serial.print("X: ");
+		Serial.print(myData.xAccelData);
+		Serial.print(" ");
+		Serial.print("Y: ");
+		Serial.print(myData.yAccelData);
+		Serial.print(" ");
+		Serial.print("Z: ");
+		Serial.print(myData.zAccelData);
+		Serial.println(" ");
+	}
+
+	delay(100);
 }
 

@@ -5,6 +5,13 @@
 #define ISM330DHCX_ADDRESS_LOW 0x6A
 #define ISM330DHCX_ADDRESS_HIGH 0x6B
 
+struct sfe_accel_data_t
+{
+	int16_t xAccelData;	
+	int16_t yAccelData;	
+	int16_t zAccelData;
+};
+
 class QwDevISM330DHCX
 {
 	public: 
@@ -60,9 +67,19 @@ class QwDevISM330DHCX
 
 		bool setAccelFullScale(uint8_t val);
 		uint8_t getAccelFullScale();
-		int16_t getTemp();
 
 		uint8_t getUniqueId();
+		int16_t getTemp();
+		sfe_accel_data_t getAccel();
+		bool setAccelDataRate(uint8_t rate);
+		bool setGyroDataRate(uint8_t rate);
+		bool setAccelStatustoInt();
+		bool checkAccelStatus();
+		bool checkGyroStatus();
+		bool checkTempStatus();
+
+		sfe_accel_data_t sfe_ism330dhcx_accelData;
+
 
 	private: 
 

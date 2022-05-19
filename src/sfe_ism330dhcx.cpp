@@ -35,7 +35,7 @@ bool QwDevISM330DHCX::init(void)
 //
 //  Parameter   Description
 //  ---------   -----------------------------
-//  retval      true if device is connected, false if not connected
+//  retVal      true if device is connected, false if not connected
 
 bool QwDevISM330DHCX::isConnected()
 {
@@ -104,10 +104,10 @@ uint8_t QwDevISM330DHCX::getUniqueId()
 	uint8_t buff = 0;
 	int32_t retVal = (ism330dhcx_device_id_get(&sfe_dev, &buff));
 
-	if(retVal == 0)
-		return buff; 
+	if(retVal != 0)
+		return 0; 
 	
-	return 0;
+	return buff;
 }
 
 
@@ -124,13 +124,37 @@ int16_t QwDevISM330DHCX::getTemp()
 
 }
 
+sfe_accel_data_t QwDevISM330DHCX::getAccel()
+{
+	
+	int16_t tempVal[3] = {0};	
+	int32_t retVal = ism330dhcx_acceleration_raw_get(&sfe_dev, tempVal);
+
+	if( retVal != 0 ){
+
+		sfe_ism330dhcx_accelData.xAccelData = 0;
+		sfe_ism330dhcx_accelData.yAccelData = 0;
+		sfe_ism330dhcx_accelData.zAccelData = 0;
+		return sfe_ism330dhcx_accelData;
+
+	}
+
+	sfe_ism330dhcx_accelData.xAccelData = tempVal[0];
+	sfe_ism330dhcx_accelData.yAccelData = tempVal[1];
+	sfe_ism330dhcx_accelData.zAccelData = tempVal[2];
+
+	return sfe_ism330dhcx_accelData;
+
+}
+
+
 
 bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 {
-	if( rate < 0 | rate > 11 )
+	if( rate < 0 || rate > 11 )
 		return false; 
 
-	int32_t retVal = ism330dhcx_xl_data_rate_set(&sfe_dev, (ism330dhcx_odr_xl_t)rate)
+	int32_t retVal = ism330dhcx_xl_data_rate_set(&sfe_dev, (ism330dhcx_odr_xl_t)rate);
 
 	if( retVal != 0)
 		return false;
@@ -140,7 +164,7 @@ bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 
 bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
 {
-	if( rate < 0 | rate > 10 )
+	if( rate < 0 || rate > 10 )
 		return false;
 
 	int32_t retVal = ism330dhcx_gy_data_rate_set(&sfe_dev,(ism330dhcx_odr_g_t)rate);
@@ -152,12 +176,12 @@ bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
 }
 
 
-bool QwDevISM330DHCX::setAccelStatustoInt(bool set)
+bool QwDevISM330DHCX::setAccelStatustoInt()
 {
 
-	ism330dhcx_int1_ctrl_t intToPin; 
+	ism330dhcx_pin_int1_route_t intToPin = {1}; 
 	
-	int32_t ism330dhcx_pin_int1_route_set(&sfe_dev,(ism330dhcx_int1_ctrl_t)&set);
+	int32_t retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &intToPin);
 
 	if( retVal != 0 )
 		return false;
@@ -166,11 +190,47 @@ bool QwDevISM330DHCX::setAccelStatustoInt(bool set)
 }
 
 
-void QwDevISM330DHCX::checkStatus()
+bool QwDevISM330DHCX::checkAccelStatus()
 {
-	uint8_t tempVal;
-	int32_t retVal = ism330dhcx_(&sfe_dev, &tempVal);
+	ism330dhcx_status_reg_t tempVal;
+	int32_t retVal = ism330dhcx_status_reg_get(&sfe_dev, &tempVal);
 
 	if( retVal != 0)
-		return -1;
+		return false;
+
+	if( tempVal.xlda == 1 )
+		return true; 
+
+	return false; 
+
+}
+
+bool QwDevISM330DHCX::checkGyroStatus()
+{
+	ism330dhcx_status_reg_t tempVal;
+	int32_t retVal = ism330dhcx_status_reg_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0)
+		return false;
+
+	if( tempVal.gda == 1 )
+		return true; 
+
+	return false; 
+
+}
+
+bool QwDevISM330DHCX::checkTempStatus()
+{
+	ism330dhcx_status_reg_t tempVal;
+	int32_t retVal = ism330dhcx_status_reg_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0)
+		return false;
+
+	if( tempVal.tda == 1 )
+		return true; 
+
+	return false; 
+
 }
