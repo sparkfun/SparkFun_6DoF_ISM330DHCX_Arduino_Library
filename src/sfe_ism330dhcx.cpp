@@ -124,7 +124,7 @@ int16_t QwDevISM330DHCX::getTemp()
 
 }
 
-sfe_accel_data_t QwDevISM330DHCX::getAccel()
+sfe_raw_data_t QwDevISM330DHCX::getRawAccel()
 {
 	
 	int16_t tempVal[3] = {0};	
@@ -132,22 +132,141 @@ sfe_accel_data_t QwDevISM330DHCX::getAccel()
 
 	if( retVal != 0 ){
 
-		sfe_ism330dhcx_accelData.xAccelData = 0;
-		sfe_ism330dhcx_accelData.yAccelData = 0;
-		sfe_ism330dhcx_accelData.zAccelData = 0;
-		return sfe_ism330dhcx_accelData;
+		sfeAccelData.xData = 0;
+		sfeAccelData.yData = 0;
+		sfeAccelData.zData = 0;
+		return sfeAccelData;
 
 	}
 
-	sfe_ism330dhcx_accelData.xAccelData = tempVal[0];
-	sfe_ism330dhcx_accelData.yAccelData = tempVal[1];
-	sfe_ism330dhcx_accelData.zAccelData = tempVal[2];
+	sfeAccelData.xData = tempVal[0];
+	sfeAccelData.yData = tempVal[1];
+	sfeAccelData.zData = tempVal[2];
 
-	return sfe_ism330dhcx_accelData;
+	return sfeAccelData;
 
 }
 
+sfe_raw_data_t QwDevISM330DHCX::getRawGyro()
+{
+	
+	int16_t tempVal[3] = {0};	
+	int32_t retVal = ism330dhcx_angular_rate_raw_get(&sfe_dev, tempVal);
 
+	if( retVal != 0 ){
+
+		sfeGyroData.xData = 0;
+		sfeGyroData.yData = 0;
+		sfeGyroData.zData = 0;
+		return sfeGyroData;
+
+	}
+
+	sfeGyroData.xData = tempVal[0];
+	sfeGyroData.yData = tempVal[1];
+	sfeGyroData.zData = tempVal[2];
+
+	return sfeGyroData;
+
+}
+
+void QwDevISM330DHCX::convert2gToMg(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs2g_to_mg(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert4gToMg(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs4g_to_mg(data[i]);
+	}
+}
+void QwDevISM330DHCX::convert8gToMg(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs8g_to_mg(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert16gToMg(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs16g_to_mg(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert125dpsToMdps(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs125dps_to_mdps(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert250dpsToMdps(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs250dps_to_mdps(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert500dpsToMdps(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs500dps_to_mdps(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert1000dpsToMdps(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs1000dps_to_mdps(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert2000dpsToMdps(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs2000dps_to_mdps(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convert4000dpsToMdps(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_fs4000dps_to_mdps(data[i]);
+	}
+}
+
+void QwDevISM330DHCX::convertToCelsius(int16_t* data, uint8_t len)
+{
+	int i; 
+	for( i = 0; i < len; i++ ) 
+	{
+		data[i] = ism330dhcx_from_lsb_to_celsius(data[i]);
+	}
+}
 
 bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 {
@@ -190,6 +309,20 @@ bool QwDevISM330DHCX::setAccelStatustoInt()
 }
 
 
+bool QwDevISM330DHCX::checkStatus()
+{
+	ism330dhcx_status_reg_t tempVal;
+	int32_t retVal = ism330dhcx_status_reg_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0)
+		return false;
+
+	if( (tempVal.xlda == 1) && (tempVal.gda == 1) )
+		return true; 
+
+	return false; 
+
+}
 bool QwDevISM330DHCX::checkAccelStatus()
 {
 	ism330dhcx_status_reg_t tempVal;

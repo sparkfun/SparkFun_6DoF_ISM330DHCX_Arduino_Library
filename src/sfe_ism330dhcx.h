@@ -5,11 +5,23 @@
 #define ISM330DHCX_ADDRESS_LOW 0x6A
 #define ISM330DHCX_ADDRESS_HIGH 0x6B
 
-struct sfe_accel_data_t
+struct sfe_raw_data_t
 {
-	int16_t xAccelData;	
-	int16_t yAccelData;	
-	int16_t zAccelData;
+	int16_t xData;	
+	int16_t yData;	
+	int16_t zData;
+};
+
+struct sfe_ism330dhcx_settings
+{
+	bool accel2g; 
+	bool accel4g; 
+	bool accel8g; 
+	bool accel16g; 
+	bool gryo2g; 
+	bool gyro4g; 
+	bool gyro8g; 
+	bool gyro16g; 
 };
 
 class QwDevISM330DHCX
@@ -69,16 +81,40 @@ class QwDevISM330DHCX
 		uint8_t getAccelFullScale();
 
 		uint8_t getUniqueId();
+
+		// Linear, Angular, and Temp Data retrieval 
 		int16_t getTemp();
-		sfe_accel_data_t getAccel();
+		sfe_raw_data_t getRawAccel();
+		sfe_raw_data_t getRawGyro();
+
+		// ISM330DHCX Settings
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
 		bool setAccelStatustoInt();
+
+		// Status
+		bool checkStatus();
 		bool checkAccelStatus();
 		bool checkGyroStatus();
 		bool checkTempStatus();
 
-		sfe_accel_data_t sfe_ism330dhcx_accelData;
+		// Conversions
+		void convert2gToMg(int16_t* data, uint8_t len);
+		void convert4gToMg(int16_t* data, uint8_t len);
+		void convert8gToMg(int16_t* data, uint8_t len);
+		void convert16gToMg(int16_t* data, uint8_t len);
+		void convert125dpsToMdps(int16_t* data, uint8_t len);
+		void convert250dpsToMdps(int16_t* data, uint8_t len);
+		void convert500dpsToMdps(int16_t* data, uint8_t len);
+		void convert1000dpsToMdps(int16_t* data, uint8_t len);
+		void convert2000dpsToMdps(int16_t* data, uint8_t len);
+		void convert4000dpsToMdps(int16_t* data, uint8_t len);
+		void convertToCelsius(int16_t* data, uint8_t len);
+
+
+		//Class structs - Better way to do this than instancing global structs??
+		sfe_raw_data_t sfeAccelData;
+		sfe_raw_data_t sfeGyroData;
 
 
 	private: 
