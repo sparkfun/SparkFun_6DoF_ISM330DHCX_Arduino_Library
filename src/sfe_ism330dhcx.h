@@ -91,6 +91,8 @@ class QwDevISM330DHCX
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
 		bool setAccelStatustoInt();
+		bool setBlockDataUpdate(bool set);
+		uint8_t getBlockDataUpdate();
 
 		// Status
 		bool checkStatus();

@@ -170,6 +170,18 @@ sfe_raw_data_t QwDevISM330DHCX::getRawGyro()
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// Conversions
+//
+// 
+//
+//
+//  
+// 
+// 
+//
+
 void QwDevISM330DHCX::convert2gToMg(int16_t* data, uint8_t len)
 {
 	int i; 
@@ -267,6 +279,41 @@ void QwDevISM330DHCX::convertToCelsius(int16_t* data, uint8_t len)
 		data[i] = ism330dhcx_from_lsb_to_celsius(data[i]);
 	}
 }
+//
+//
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// ISM330DHCX Settings
+//
+// 
+//
+//
+//  
+// 
+// 
+
+bool QwDevISM330DHCX::setBlockDataUpdate(bool set)
+{
+
+	int32_t retVal = ism330dhcx_block_data_update_set(&sfe_dev, (uint8_t)set);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+uint8_t QwDevISM330DHCX::getBlockDataUpdate()
+{
+
+	uint8_t tempVal;
+	int32_t retVal = ism330dhcx_block_data_update_get(&sfe_dev, &tempVal);
+
+	return tempVal; 
+}
 
 bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 {
@@ -307,7 +354,9 @@ bool QwDevISM330DHCX::setAccelStatustoInt()
 
 	return true; 
 }
-
+//
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 bool QwDevISM330DHCX::checkStatus()
 {
