@@ -80,6 +80,25 @@ bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)
 	int32_t retVal = (ism330dhcx_xl_full_scale_set(&sfe_dev, 
 																								(ism330dhcx_fs_xl_t)val));
 	
+	fullScaleAccel = val; 
+
+	if( retVal != 0 )
+		return false; 
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setGyroFullScale(uint8_t val)
+{
+	//0,1,2,4,8,12
+	if( val > 12 )
+		return false;
+	
+	int32_t retVal = ism330dhcx_gy_full_scale_set(&sfe_dev,
+																							  (ism330dhcx_fs_g_t)val);
+	
+	fullScaleGyro = val; 
+
 	if( retVal != 0 )
 		return false; 
 
@@ -124,51 +143,128 @@ int16_t QwDevISM330DHCX::getTemp()
 
 }
 
-sfe_raw_data_t QwDevISM330DHCX::getRawAccel()
+bool QwDevISM330DHCX::getRawAccel(sfe_raw_data_t* accelData)
 {
 	
 	int16_t tempVal[3] = {0};	
 	int32_t retVal = ism330dhcx_acceleration_raw_get(&sfe_dev, tempVal);
 
-	if( retVal != 0 ){
+	if( retVal != 0 )
+		return false;
 
-		sfeAccelData.xData = 0;
-		sfeAccelData.yData = 0;
-		sfeAccelData.zData = 0;
-		return sfeAccelData;
+	accelData.xData = tempVal[0];
+	accelData.yData = tempVal[1];
+	accelData.zData = tempVal[2];
 
-	}
-
-	sfeAccelData.xData = tempVal[0];
-	sfeAccelData.yData = tempVal[1];
-	sfeAccelData.zData = tempVal[2];
-
-	return sfeAccelData;
+	return true;
 
 }
 
-sfe_raw_data_t QwDevISM330DHCX::getRawGyro()
+bool QwDevISM330DHCX::getRawGyro(sfe_raw_data_t* gyroData)
 {
 	
 	int16_t tempVal[3] = {0};	
 	int32_t retVal = ism330dhcx_angular_rate_raw_get(&sfe_dev, tempVal);
 
-	if( retVal != 0 ){
+	if( retVal != 0 )
+		return false;
 
-		sfeGyroData.xData = 0;
-		sfeGyroData.yData = 0;
-		sfeGyroData.zData = 0;
-		return sfeGyroData;
 
-	}
+	gyroData.xData = tempVal[0];
+	gyroData.yData = tempVal[1];
+	gyroData.zData = tempVal[2];
 
-	sfeGyroData.xData = tempVal[0];
-	sfeGyroData.yData = tempVal[1];
-	sfeGyroData.zData = tempVal[2];
-
-	return sfeGyroData;
+	return true;
 
 }
+
+bool QwDevISM330DHCX::getAccel(sfe_data_t* accelData)
+{
+	
+	int16_t tempVal[3] = {0};	
+	int32_t retVal = ism330dhcx_angular_rate_raw_get(&sfe_dev, tempVal);
+
+	if( retVal != 0 )
+		return false;
+	
+	switch( fullScaleAccel ){
+		case 0:
+			accelData.xData = convert2gToMg(tempVal[0]);
+			accelData.yData = convert2gToMg(tempVal[1]);
+			accelData.zData = convert2gToMg(tempVal[2]);
+			break;
+		case 1:
+			accelData.xData = convert16gToMg(tempVal[0]);
+			accelData.yData = convert16gToMg(tempVal[1]);
+			accelData.zData = convert16gToMg(tempVal[2]);
+			break;
+		case 2:
+			accelData.xData = convert4gToMg(tempVal[0]);
+			accelData.yData = convert4gToMg(tempVal[1]);
+			accelData.zData = convert4gToMg(tempVal[2]);
+			break;
+		case 3:
+			accelData.xData = convert8gToMg(tempVal[0]);
+			accelData.yData = convert8gToMg(tempVal[1]);
+			accelData.zData = convert8gToMg(tempVal[2]);
+			break;
+		default:
+			return false; //Something has gone wrong
+	}
+
+	return true;
+}
+
+
+bool QwDevISM330DHCX::getGyro(sfe_data_t* gyroData)
+{
+	
+	int16_t tempVal[3] = {0};	
+	int32_t retVal = ism330dhcx_angular_rate_raw_get(&sfe_dev, tempVal);
+
+	if( retVal != 0 )
+		return false;
+
+	switch( fullScaleGyro ){
+		case 0:
+			gyroData.xData = convert125dpsToMdps(tempVal[0]);
+			gyroData.yData = convert125dpsToMdps(tempVal[1]);
+			gyroData.zData = convert125dpsToMdps(tempVal[2]);
+			break;
+		case 1:
+			gyroData.xData = convert250dpsToMdps(tempVal[0]);
+			gyroData.yData = convert250dpsToMdps(tempVal[1]);
+			gyroData.zData = convert250dpsToMdps(tempVal[2]);
+			break;
+		case 2:
+			gyroData.xData = convert500dpsToMdps(tempVal[0]);
+			gyroData.yData = convert500dpsToMdps(tempVal[1]);
+			gyroData.zData = convert500dpsToMdps(tempVal[2]);
+			break;
+		case 4:
+			gyroData.xData = convert1000dpsToMdps(tempVal[0]);
+			gyroData.yData = convert1000dpsToMdps(tempVal[1]);
+			gyroData.zData = convert1000dpsToMdps(tempVal[2]);
+			break;
+		case 3:
+			gyroData.xData = convert1000dpsToMdps(tempVal[0]);
+			gyroData.yData = convert1000dpsToMdps(tempVal[1]);
+			gyroData.zData = convert1000dpsToMdps(tempVal[2]);
+			break;
+		default:
+			return false; //Something has gone wrong
+	}
+
+
+
+	gyroData.xData = tempVal[0];
+	gyroData.yData = tempVal[1];
+	gyroData.zData = tempVal[2];
+
+	return true;
+
+}
+
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -182,103 +278,61 @@ sfe_raw_data_t QwDevISM330DHCX::getRawGyro()
 // 
 //
 
-void QwDevISM330DHCX::convert2gToMg(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert2gToMg(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs2g_to_mg(data[i]);
-	}
+	ism330dhcx_from_fs2g_to_mg(data);
 }
 
-void QwDevISM330DHCX::convert4gToMg(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert4gToMg(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs4g_to_mg(data[i]);
-	}
-}
-void QwDevISM330DHCX::convert8gToMg(int16_t* data, uint8_t len)
-{
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs8g_to_mg(data[i]);
-	}
+	ism330dhcx_from_fs4g_to_mg(data);
 }
 
-void QwDevISM330DHCX::convert16gToMg(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert8gToMg(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs16g_to_mg(data[i]);
-	}
+	ism330dhcx_from_fs8g_to_mg(data);
 }
 
-void QwDevISM330DHCX::convert125dpsToMdps(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert16gToMg(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs125dps_to_mdps(data[i]);
-	}
+	ism330dhcx_from_fs16g_to_mg(data);
 }
 
-void QwDevISM330DHCX::convert250dpsToMdps(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert125dpsToMdps(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs250dps_to_mdps(data[i]);
-	}
+	ism330dhcx_from_fs125dps_to_mdps(data);
 }
 
-void QwDevISM330DHCX::convert500dpsToMdps(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert250dpsToMdps(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs500dps_to_mdps(data[i]);
-	}
+	ism330dhcx_from_fs250dps_to_mdps(data);
 }
 
-void QwDevISM330DHCX::convert1000dpsToMdps(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert500dpsToMdps(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs1000dps_to_mdps(data[i]);
-	}
+	ism330dhcx_from_fs500dps_to_mdps(data);
 }
 
-void QwDevISM330DHCX::convert2000dpsToMdps(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert1000dpsToMdps(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs2000dps_to_mdps(data[i]);
-	}
+	ism330dhcx_from_fs1000dps_to_mdps(data);
 }
 
-void QwDevISM330DHCX::convert4000dpsToMdps(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert2000dpsToMdps(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_fs4000dps_to_mdps(data[i]);
-	}
+	ism330dhcx_from_fs2000dps_to_mdps(data);
 }
 
-void QwDevISM330DHCX::convertToCelsius(int16_t* data, uint8_t len)
+void QwDevISM330DHCX::convert4000dpsToMdps(int16_t* data)
 {
-	int i; 
-	for( i = 0; i < len; i++ ) 
-	{
-		data[i] = ism330dhcx_from_lsb_to_celsius(data[i]);
-	}
+	ism330dhcx_from_fs4000dps_to_mdps(data);
 }
+
+void QwDevISM330DHCX::convertToCelsius(int16_t* data)
+{
+	ism330dhcx_from_lsb_to_celsius(data);
+}
+
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -398,12 +452,16 @@ bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* se
 	{
 		case 0:
 			retVal = ism330dhcx_sh_slv0_cfg_read(&sfe_dev, &tempSett);
+			break;
 		case 1:
 			retVal = ism330dhcx_sh_slv1_cfg_read(&sfe_dev, &tempSett);
+			break;
 		case 2:
 			retVal = ism330dhcx_sh_slv2_cfg_read(&sfe_dev, &tempSett);
+			break;
 		case 3:
 			retVal = ism330dhcx_sh_slv3_cfg_read(&sfe_dev, &tempSett);
+			break;
 		default:
 			return false;
 	}
@@ -444,6 +502,50 @@ bool QwDevISM330DHCX::enableSensorI2C(bool enable)
 	return true;
 }
 
+bool QwDevISM330DHCX::readPeripheralSensor(uint8_t shReg[], uint8_t len)
+{
+	int32_t retVal;
+
+	// 
+	retVal = ism330dhcx_sh_read_data_raw_get(&sfe_dev,
+                                        (ism330dhcx_emb_sh_read_t)shReg,
+                                        uint8_t len)
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::readMMCMagnetometer(uint8_t magData[], uint8_t len)
+{
+	int32_t retVal;
+
+	readPeripheralSensor(magData, len); 
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setHubWriteMode(uint8_t config)
+{
+	int32_t retVal;
+
+	if( config > 1)
+		return false;
+
+	// 0 = Write each cycle 
+	// 1 = Write once
+	retVal = ism330dhcx_sh_write_mode_set(&sfe_dev,
+																			 (ism330dhcx_write_once_t)config);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
 //
 //
 //////////////////////////////////////////////////////////////////////////////////

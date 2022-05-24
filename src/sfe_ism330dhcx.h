@@ -12,17 +12,13 @@ struct sfe_raw_data_t
 	int16_t zData;
 };
 
-struct sfe_ism330dhcx_settings
+struct sfe_data_t
 {
-	bool accel2g; 
-	bool accel4g; 
-	bool accel8g; 
-	bool accel16g; 
-	bool gryo2g; 
-	bool gyro4g; 
-	bool gyro8g; 
-	bool gyro16g; 
+	float xData;	
+	float yData;	
+	float zData;
 };
+
 
 struct sfe_hub_sensor_settings_t
 {
@@ -91,8 +87,9 @@ class QwDevISM330DHCX
 
 		// Linear, Angular, and Temp Data retrieval 
 		int16_t getTemp();
-		sfe_raw_data_t getRawAccel();
-		sfe_raw_data_t getRawGyro();
+		bool getRawAccel(sfe_raw_data_t* accelData);
+		bool getRawGyro(sfe_raw_data_t* gyroData);
+		bool getAccel(sfe_data_t* accelData);
 
 		// General Settings
 		bool setAccelDataRate(uint8_t rate);
@@ -106,6 +103,8 @@ class QwDevISM330DHCX
 		bool setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
 		bool setNumberHubSensors(uint8_t numSensors);
 		bool enableSensorI2C(bool enable);
+		bool readPeripheralSensor(uint8_t shReg[], uint8_t len);
+		bool setHubWriteMode(uint8_t config);
 
 
 		// Status
@@ -127,17 +126,13 @@ class QwDevISM330DHCX
 		void convert4000dpsToMdps(int16_t* data, uint8_t len);
 		void convertToCelsius(int16_t* data, uint8_t len);
 
-
-		//Class structs - Better way to do this than instancing global structs??
-		sfe_raw_data_t sfeAccelData;
-		sfe_raw_data_t sfeGyroData;
-
-
 	private: 
 
 		QwI2C *_i2cBus; 
 		uint8_t _i2cAddress;
 		stmdev_ctx_t sfe_dev; 
+		uint8_t fullScaleAccel = 0; //Powered down by default
+		uint8_t fullScaleGyro = 0;  //Powered down by default
 };
 
 

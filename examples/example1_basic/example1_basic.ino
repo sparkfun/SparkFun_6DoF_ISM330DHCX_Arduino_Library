@@ -17,7 +17,6 @@ void setup(){
 	//set ODR
 
 	myISM.setAccelDataRate(6);
-	myISM. 
 }
 
 void loop(){
