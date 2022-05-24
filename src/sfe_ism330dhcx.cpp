@@ -74,7 +74,7 @@ int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint1
 
 bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)
 {
-	if( val < 0 | val > 3 )
+	if( val > 3 )
 		return false;
 	
 	int32_t retVal = (ism330dhcx_xl_full_scale_set(&sfe_dev, 
@@ -286,7 +286,7 @@ void QwDevISM330DHCX::convertToCelsius(int16_t* data, uint8_t len)
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// ISM330DHCX Settings
+// General Settings
 //
 // 
 //
@@ -317,7 +317,7 @@ uint8_t QwDevISM330DHCX::getBlockDataUpdate()
 
 bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 {
-	if( rate < 0 || rate > 11 )
+	if( rate > 11 )
 		return false; 
 
 	int32_t retVal = ism330dhcx_xl_data_rate_set(&sfe_dev, (ism330dhcx_odr_xl_t)rate);
@@ -330,7 +330,7 @@ bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 
 bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
 {
-	if( rate < 0 || rate > 10 )
+	if( rate > 10 )
 		return false;
 
 	int32_t retVal = ism330dhcx_gy_data_rate_set(&sfe_dev,(ism330dhcx_odr_g_t)rate);
@@ -358,6 +358,65 @@ bool QwDevISM330DHCX::setAccelStatustoInt()
 //
 //////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////
+// Sensor Hub Settings
+//
+// 
+//
+//
+//  
+// 
+// 
+
+bool QwDevISM330DHCX::setHubODR(uint8_t rate)
+{
+	//0 = 104Hz, 1 = 52Hz, 2 = 26Hz, 3 = 13Hz
+	if( rate > 3 )
+		return false;
+
+	int32_t retVal = ism330dhcx_sh_data_rate_set(&sfe_dev, (ism330dhcx_shub_odr_t)rate);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings)
+{
+	int32_t retVal;
+	ism330dhcx_sh_cfg_write_t tempSett;
+
+	if( sensor > 3 )
+		return false;
+
+	tempSett.slv_add = settings->address; 
+	tempSett.slv_subadd = settings->subAddress; 
+	tempSett.slv_len = settings->length; 
+
+	switch( sensor )
+	{
+		case 0:
+			retVal = ism330dhcx_sh_slv0_cfg_read(&sfe_dev, &tempSett);
+		case 1:
+			retVal = ism330dhcx_sh_slv1_cfg_read(&sfe_dev, &tempSett);
+		case 2:
+			retVal = ism330dhcx_sh_slv2_cfg_read(&sfe_dev, &tempSett);
+		case 3:
+			retVal = ism330dhcx_sh_slv3_cfg_read(&sfe_dev, &tempSett);
+		default:
+			return false;
+	}
+
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+//
+//
+//////////////////////////////////////////////////////////////////////////////////
 bool QwDevISM330DHCX::checkStatus()
 {
 	ism330dhcx_status_reg_t tempVal;

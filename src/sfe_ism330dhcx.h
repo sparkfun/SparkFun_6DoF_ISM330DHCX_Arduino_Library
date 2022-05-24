@@ -24,6 +24,13 @@ struct sfe_ism330dhcx_settings
 	bool gyro16g; 
 };
 
+struct sfe_hub_sensor_settings_t
+{
+	uint8_t address;
+	uint8_t subAddress;
+	uint8_t length;
+};
+
 class QwDevISM330DHCX
 {
 	public: 
@@ -87,12 +94,16 @@ class QwDevISM330DHCX
 		sfe_raw_data_t getRawAccel();
 		sfe_raw_data_t getRawGyro();
 
-		// ISM330DHCX Settings
+		// General Settings
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
 		bool setAccelStatustoInt();
 		bool setBlockDataUpdate(bool set);
 		uint8_t getBlockDataUpdate();
+		
+		// Sensor Hub Settings
+		bool setHubODR(uint8_t rate);
+		bool setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
 
 		// Status
 		bool checkStatus();
