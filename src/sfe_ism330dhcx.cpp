@@ -385,25 +385,25 @@ bool QwDevISM330DHCX::setHubODR(uint8_t rate)
 bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings)
 {
 	int32_t retVal;
-	ism330dhcx_sh_cfg_write_t tempSett;
+	ism330dhcx_sh_cfg_read_t tempSett;
 
 	if( sensor > 3 )
 		return false;
 
-	tempSett.slv0_add = settings->address; 
-	tempSett.slv0_subadd = settings->subAddress; 
-	tempSett.slv0_len = settings->length; 
+	tempSett.slv_add = settings->address; 
+	tempSett.slv_subadd = settings->subAddress; 
+	tempSett.slv_len = settings->length; 
 
 	switch( sensor )
 	{
 		case 0:
-			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
+			retVal = ism330dhcx_sh_slv0_cfg_read(&sfe_dev, &tempSett);
 		case 1:
-			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
+			retVal = ism330dhcx_sh_slv1_cfg_read(&sfe_dev, &tempSett);
 		case 2:
-			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
+			retVal = ism330dhcx_sh_slv2_cfg_read(&sfe_dev, &tempSett);
 		case 3:
-			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
+			retVal = ism330dhcx_sh_slv3_cfg_read(&sfe_dev, &tempSett);
 		default:
 			return false;
 	}
@@ -414,6 +414,36 @@ bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* se
 
 	return true; 
 }
+
+bool QwDevISM330DHCX::setNumberHubSensors(uint8_t numSensors)
+{
+
+	int32_t retVal;
+	if( numSensors > 3 ) 
+		return false; 
+
+	retVal = ism330dhcx_sh_slave_connected_set(&sfe_dev, 
+																					 (ism330dhcx_aux_sens_on_t)numSensors);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+
+}
+
+bool QwDevISM330DHCX::enableSensorI2C(bool enable)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_sh_master_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
 //
 //
 //////////////////////////////////////////////////////////////////////////////////

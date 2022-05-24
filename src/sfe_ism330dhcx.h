@@ -104,6 +104,9 @@ class QwDevISM330DHCX
 		// Sensor Hub Settings
 		bool setHubODR(uint8_t rate);
 		bool setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
+		bool setNumberHubSensors(uint8_t numSensors);
+		bool enableSensorI2C(bool enable);
+
 
 		// Status
 		bool checkStatus();
