@@ -390,20 +390,20 @@ bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* se
 	if( sensor > 3 )
 		return false;
 
-	tempSett.slv_add = settings->address; 
-	tempSett.slv_subadd = settings->subAddress; 
-	tempSett.slv_len = settings->length; 
+	tempSett.slv0_add = settings->address; 
+	tempSett.slv0_subadd = settings->subAddress; 
+	tempSett.slv0_len = settings->length; 
 
 	switch( sensor )
 	{
 		case 0:
-			retVal = ism330dhcx_sh_slv0_cfg_read(&sfe_dev, &tempSett);
+			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
 		case 1:
-			retVal = ism330dhcx_sh_slv1_cfg_read(&sfe_dev, &tempSett);
+			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
 		case 2:
-			retVal = ism330dhcx_sh_slv2_cfg_read(&sfe_dev, &tempSett);
+			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
 		case 3:
-			retVal = ism330dhcx_sh_slv3_cfg_read(&sfe_dev, &tempSett);
+			retVal =  ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
 		default:
 			return false;
 	}
