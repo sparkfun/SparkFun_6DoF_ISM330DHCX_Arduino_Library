@@ -508,8 +508,7 @@ bool QwDevISM330DHCX::readPeripheralSensor(uint8_t* shReg, uint8_t len)
 {
 	int32_t retVal;
 
-	// 
-	retVal = ism330dhcx_sh_read_data_raw_get(&sfe_dev, (ism330dhcx_emb_sh_read_t)shReg, len);
+	retVal = ism330dhcx_sh_read_data_raw_get(&sfe_dev, (ism330dhcx_emb_sh_read_t*)shReg, len);
 
 	if( retVal != 0 )
 		return false;
