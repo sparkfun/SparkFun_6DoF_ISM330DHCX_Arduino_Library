@@ -2,7 +2,7 @@
 #include "SparkFun_ISM330DHCX.h"
 
 SparkFun_ISM330DHCX myISM; 
-sfe_raw_data_t myData; 
+sfe_ism_raw_data_t myData; 
 
 void setup(){
 

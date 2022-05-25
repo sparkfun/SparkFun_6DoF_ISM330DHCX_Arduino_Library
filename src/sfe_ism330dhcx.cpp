@@ -143,7 +143,7 @@ int16_t QwDevISM330DHCX::getTemp()
 
 }
 
-bool QwDevISM330DHCX::getRawAccel(sfe_raw_data_t* accelData)
+bool QwDevISM330DHCX::getRawAccel(sfe_ism_raw_data_t* accelData)
 {
 	
 	int16_t tempVal[3] = {0};	
@@ -152,15 +152,15 @@ bool QwDevISM330DHCX::getRawAccel(sfe_raw_data_t* accelData)
 	if( retVal != 0 )
 		return false;
 
-	accelData.xData = tempVal[0];
-	accelData.yData = tempVal[1];
-	accelData.zData = tempVal[2];
+	accelData->xData = tempVal[0];
+	accelData->yData = tempVal[1];
+	accelData->zData = tempVal[2];
 
 	return true;
 
 }
 
-bool QwDevISM330DHCX::getRawGyro(sfe_raw_data_t* gyroData)
+bool QwDevISM330DHCX::getRawGyro(sfe_ism_raw_data_t* gyroData)
 {
 	
 	int16_t tempVal[3] = {0};	
@@ -170,15 +170,15 @@ bool QwDevISM330DHCX::getRawGyro(sfe_raw_data_t* gyroData)
 		return false;
 
 
-	gyroData.xData = tempVal[0];
-	gyroData.yData = tempVal[1];
-	gyroData.zData = tempVal[2];
+	gyroData->xData = tempVal[0];
+	gyroData->yData = tempVal[1];
+	gyroData->zData = tempVal[2];
 
 	return true;
 
 }
 
-bool QwDevISM330DHCX::getAccel(sfe_data_t* accelData)
+bool QwDevISM330DHCX::getAccel(sfe_ism_data_t* accelData)
 {
 	
 	int16_t tempVal[3] = {0};	
@@ -187,26 +187,28 @@ bool QwDevISM330DHCX::getAccel(sfe_data_t* accelData)
 	if( retVal != 0 )
 		return false;
 	
+	// Private variable that keeps track of the users settings
+	// so that the register values can be converted accordingly
 	switch( fullScaleAccel ){
 		case 0:
-			accelData.xData = convert2gToMg(tempVal[0]);
-			accelData.yData = convert2gToMg(tempVal[1]);
-			accelData.zData = convert2gToMg(tempVal[2]);
+			accelData->xData = convert2gToMg(tempVal[0]);
+			accelData->yData = convert2gToMg(tempVal[1]);
+			accelData->zData = convert2gToMg(tempVal[2]);
 			break;
 		case 1:
-			accelData.xData = convert16gToMg(tempVal[0]);
-			accelData.yData = convert16gToMg(tempVal[1]);
-			accelData.zData = convert16gToMg(tempVal[2]);
+			accelData->xData = convert16gToMg(tempVal[0]);
+			accelData->yData = convert16gToMg(tempVal[1]);
+			accelData->zData = convert16gToMg(tempVal[2]);
 			break;
 		case 2:
-			accelData.xData = convert4gToMg(tempVal[0]);
-			accelData.yData = convert4gToMg(tempVal[1]);
-			accelData.zData = convert4gToMg(tempVal[2]);
+			accelData->xData = convert4gToMg(tempVal[0]);
+			accelData->yData = convert4gToMg(tempVal[1]);
+			accelData->zData = convert4gToMg(tempVal[2]);
 			break;
 		case 3:
-			accelData.xData = convert8gToMg(tempVal[0]);
-			accelData.yData = convert8gToMg(tempVal[1]);
-			accelData.zData = convert8gToMg(tempVal[2]);
+			accelData->xData = convert8gToMg(tempVal[0]);
+			accelData->yData = convert8gToMg(tempVal[1]);
+			accelData->zData = convert8gToMg(tempVal[2]);
 			break;
 		default:
 			return false; //Something has gone wrong
@@ -216,7 +218,7 @@ bool QwDevISM330DHCX::getAccel(sfe_data_t* accelData)
 }
 
 
-bool QwDevISM330DHCX::getGyro(sfe_data_t* gyroData)
+bool QwDevISM330DHCX::getGyro(sfe_ism_data_t* gyroData)
 {
 	
 	int16_t tempVal[3] = {0};	
@@ -225,44 +227,44 @@ bool QwDevISM330DHCX::getGyro(sfe_data_t* gyroData)
 	if( retVal != 0 )
 		return false;
 
+	// Private variable that keeps track of the users settings
+	// so that the register values can be converted accordingly
 	switch( fullScaleGyro ){
 		case 0:
-			gyroData.xData = convert125dpsToMdps(tempVal[0]);
-			gyroData.yData = convert125dpsToMdps(tempVal[1]);
-			gyroData.zData = convert125dpsToMdps(tempVal[2]);
+			gyroData->xData = convert250dpsToMdps(tempVal[0]);
+			gyroData->yData = convert250dpsToMdps(tempVal[1]);
+			gyroData->zData = convert250dpsToMdps(tempVal[2]);
 			break;
 		case 1:
-			gyroData.xData = convert250dpsToMdps(tempVal[0]);
-			gyroData.yData = convert250dpsToMdps(tempVal[1]);
-			gyroData.zData = convert250dpsToMdps(tempVal[2]);
+			gyroData->xData = convert4000dpsToMdps(tempVal[0]);
+			gyroData->yData = convert4000dpsToMdps(tempVal[1]);
+			gyroData->zData = convert4000dpsToMdps(tempVal[2]);
 			break;
 		case 2:
-			gyroData.xData = convert500dpsToMdps(tempVal[0]);
-			gyroData.yData = convert500dpsToMdps(tempVal[1]);
-			gyroData.zData = convert500dpsToMdps(tempVal[2]);
+			gyroData->xData = convert125dpsToMdps(tempVal[0]);
+			gyroData->yData = convert125dpsToMdps(tempVal[1]);
+			gyroData->zData = convert125dpsToMdps(tempVal[2]);
 			break;
 		case 4:
-			gyroData.xData = convert1000dpsToMdps(tempVal[0]);
-			gyroData.yData = convert1000dpsToMdps(tempVal[1]);
-			gyroData.zData = convert1000dpsToMdps(tempVal[2]);
+			gyroData->xData = convert500dpsToMdps(tempVal[0]);
+			gyroData->yData = convert500dpsToMdps(tempVal[1]);
+			gyroData->zData = convert500dpsToMdps(tempVal[2]);
 			break;
-		case 3:
-			gyroData.xData = convert1000dpsToMdps(tempVal[0]);
-			gyroData.yData = convert1000dpsToMdps(tempVal[1]);
-			gyroData.zData = convert1000dpsToMdps(tempVal[2]);
+		case 8:
+			gyroData->xData = convert1000dpsToMdps(tempVal[0]);
+			gyroData->yData = convert1000dpsToMdps(tempVal[1]);
+			gyroData->zData = convert1000dpsToMdps(tempVal[2]);
+			break;
+		case 12:
+			gyroData->xData = convert2000dpsToMdps(tempVal[0]);
+			gyroData->yData = convert2000dpsToMdps(tempVal[1]);
+			gyroData->zData = convert2000dpsToMdps(tempVal[2]);
 			break;
 		default:
 			return false; //Something has gone wrong
 	}
 
-
-
-	gyroData.xData = tempVal[0];
-	gyroData.yData = tempVal[1];
-	gyroData.zData = tempVal[2];
-
 	return true;
-
 }
 
 
@@ -278,59 +280,59 @@ bool QwDevISM330DHCX::getGyro(sfe_data_t* gyroData)
 // 
 //
 
-void QwDevISM330DHCX::convert2gToMg(int16_t* data)
+float QwDevISM330DHCX::convert2gToMg(int16_t data)
 {
-	ism330dhcx_from_fs2g_to_mg(data);
+	return(ism330dhcx_from_fs2g_to_mg(data));
 }
 
-void QwDevISM330DHCX::convert4gToMg(int16_t* data)
+float QwDevISM330DHCX::convert4gToMg(int16_t data)
 {
-	ism330dhcx_from_fs4g_to_mg(data);
+	return(ism330dhcx_from_fs4g_to_mg(data));
 }
 
-void QwDevISM330DHCX::convert8gToMg(int16_t* data)
+float QwDevISM330DHCX::convert8gToMg(int16_t data)
 {
-	ism330dhcx_from_fs8g_to_mg(data);
+	return(ism330dhcx_from_fs8g_to_mg(data));
 }
 
-void QwDevISM330DHCX::convert16gToMg(int16_t* data)
+float QwDevISM330DHCX::convert16gToMg(int16_t data)
 {
-	ism330dhcx_from_fs16g_to_mg(data);
+	return(ism330dhcx_from_fs16g_to_mg(data));
 }
 
-void QwDevISM330DHCX::convert125dpsToMdps(int16_t* data)
+float QwDevISM330DHCX::convert125dpsToMdps(int16_t data)
 {
-	ism330dhcx_from_fs125dps_to_mdps(data);
+	return(ism330dhcx_from_fs125dps_to_mdps(data));
 }
 
-void QwDevISM330DHCX::convert250dpsToMdps(int16_t* data)
+float QwDevISM330DHCX::convert250dpsToMdps(int16_t data)
 {
-	ism330dhcx_from_fs250dps_to_mdps(data);
+	return(ism330dhcx_from_fs250dps_to_mdps(data));
 }
 
-void QwDevISM330DHCX::convert500dpsToMdps(int16_t* data)
+float QwDevISM330DHCX::convert500dpsToMdps(int16_t data)
 {
-	ism330dhcx_from_fs500dps_to_mdps(data);
+	return(ism330dhcx_from_fs500dps_to_mdps(data));
 }
 
-void QwDevISM330DHCX::convert1000dpsToMdps(int16_t* data)
+float QwDevISM330DHCX::convert1000dpsToMdps(int16_t data)
 {
-	ism330dhcx_from_fs1000dps_to_mdps(data);
+	return(ism330dhcx_from_fs1000dps_to_mdps(data));
 }
 
-void QwDevISM330DHCX::convert2000dpsToMdps(int16_t* data)
+float QwDevISM330DHCX::convert2000dpsToMdps(int16_t data)
 {
-	ism330dhcx_from_fs2000dps_to_mdps(data);
+	return(ism330dhcx_from_fs2000dps_to_mdps(data));
 }
 
-void QwDevISM330DHCX::convert4000dpsToMdps(int16_t* data)
+float QwDevISM330DHCX::convert4000dpsToMdps(int16_t data)
 {
-	ism330dhcx_from_fs4000dps_to_mdps(data);
+	return(ism330dhcx_from_fs4000dps_to_mdps(data));
 }
 
-void QwDevISM330DHCX::convertToCelsius(int16_t* data)
+float QwDevISM330DHCX::convertToCelsius(int16_t data)
 {
-	ism330dhcx_from_lsb_to_celsius(data);
+	return(ism330dhcx_from_lsb_to_celsius(data));
 }
 
 //
@@ -502,14 +504,12 @@ bool QwDevISM330DHCX::enableSensorI2C(bool enable)
 	return true;
 }
 
-bool QwDevISM330DHCX::readPeripheralSensor(uint8_t shReg[], uint8_t len)
+bool QwDevISM330DHCX::readPeripheralSensor(uint8_t* shReg, uint8_t len)
 {
 	int32_t retVal;
 
 	// 
-	retVal = ism330dhcx_sh_read_data_raw_get(&sfe_dev,
-                                        (ism330dhcx_emb_sh_read_t)shReg,
-                                        uint8_t len)
+	retVal = ism330dhcx_sh_read_data_raw_get(&sfe_dev, (ism330dhcx_emb_sh_read_t)shReg, len);
 
 	if( retVal != 0 )
 		return false;
@@ -517,7 +517,7 @@ bool QwDevISM330DHCX::readPeripheralSensor(uint8_t shReg[], uint8_t len)
 	return true;
 }
 
-bool QwDevISM330DHCX::readMMCMagnetometer(uint8_t magData[], uint8_t len)
+bool QwDevISM330DHCX::readMMCMagnetometer(uint8_t* magData, uint8_t len)
 {
 	int32_t retVal;
 

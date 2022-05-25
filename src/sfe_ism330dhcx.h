@@ -5,14 +5,14 @@
 #define ISM330DHCX_ADDRESS_LOW 0x6A
 #define ISM330DHCX_ADDRESS_HIGH 0x6B
 
-struct sfe_raw_data_t
+struct sfe_ism_raw_data_t
 {
 	int16_t xData;	
 	int16_t yData;	
 	int16_t zData;
 };
 
-struct sfe_data_t
+struct sfe_ism_data_t
 {
 	float xData;	
 	float yData;	
@@ -81,15 +81,17 @@ class QwDevISM330DHCX
     void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
 
 		bool setAccelFullScale(uint8_t val);
+		bool setGyroFullScale(uint8_t val);
 		uint8_t getAccelFullScale();
 
 		uint8_t getUniqueId();
 
 		// Linear, Angular, and Temp Data retrieval 
 		int16_t getTemp();
-		bool getRawAccel(sfe_raw_data_t* accelData);
-		bool getRawGyro(sfe_raw_data_t* gyroData);
-		bool getAccel(sfe_data_t* accelData);
+		bool getRawAccel(sfe_ism_raw_data_t* accelData);
+		bool getRawGyro(sfe_ism_raw_data_t* gyroData);
+		bool getAccel(sfe_ism_data_t* accelData);
+		bool getGyro(sfe_ism_data_t* gyroData);
 
 		// General Settings
 		bool setAccelDataRate(uint8_t rate);
@@ -103,8 +105,9 @@ class QwDevISM330DHCX
 		bool setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
 		bool setNumberHubSensors(uint8_t numSensors);
 		bool enableSensorI2C(bool enable);
-		bool readPeripheralSensor(uint8_t shReg[], uint8_t len);
+		bool readPeripheralSensor(uint8_t* shReg, uint8_t len);
 		bool setHubWriteMode(uint8_t config);
+		bool readMMCMagnetometer(uint8_t* magData, uint8_t len);
 
 
 		// Status
@@ -114,17 +117,17 @@ class QwDevISM330DHCX
 		bool checkTempStatus();
 
 		// Conversions
-		void convert2gToMg(int16_t* data, uint8_t len);
-		void convert4gToMg(int16_t* data, uint8_t len);
-		void convert8gToMg(int16_t* data, uint8_t len);
-		void convert16gToMg(int16_t* data, uint8_t len);
-		void convert125dpsToMdps(int16_t* data, uint8_t len);
-		void convert250dpsToMdps(int16_t* data, uint8_t len);
-		void convert500dpsToMdps(int16_t* data, uint8_t len);
-		void convert1000dpsToMdps(int16_t* data, uint8_t len);
-		void convert2000dpsToMdps(int16_t* data, uint8_t len);
-		void convert4000dpsToMdps(int16_t* data, uint8_t len);
-		void convertToCelsius(int16_t* data, uint8_t len);
+		float convert2gToMg(int16_t data);
+		float convert4gToMg(int16_t data);
+		float convert8gToMg(int16_t data);
+		float convert16gToMg(int16_t data);
+		float convert125dpsToMdps(int16_t data);
+		float convert250dpsToMdps(int16_t data);
+		float convert500dpsToMdps(int16_t data);
+		float convert1000dpsToMdps(int16_t data);
+		float convert2000dpsToMdps(int16_t data);
+		float convert4000dpsToMdps(int16_t data);
+		float convertToCelsius(int16_t data);
 
 	private: 
 
