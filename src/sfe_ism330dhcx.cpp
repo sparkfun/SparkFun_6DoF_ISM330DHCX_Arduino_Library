@@ -74,6 +74,7 @@ int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint1
 
 bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)
 {
+	//0 = 2g, 1 = 16g, 2 = 4g, 3 = 8g
 	if( val > 3 )
 		return false;
 	
@@ -182,7 +183,7 @@ bool QwDevISM330DHCX::getAccel(sfe_ism_data_t* accelData)
 {
 	
 	int16_t tempVal[3] = {0};	
-	int32_t retVal = ism330dhcx_angular_rate_raw_get(&sfe_dev, tempVal);
+	int32_t retVal = ism330dhcx_acceleration_raw_get(&sfe_dev, tempVal);
 
 	if( retVal != 0 )
 		return false;
