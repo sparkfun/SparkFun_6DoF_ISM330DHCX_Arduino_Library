@@ -546,6 +546,18 @@ bool QwDevISM330DHCX::setHubWriteMode(uint8_t config)
 
 	return true;
 }
+
+bool QwDevISM330DHCX::setHubPassThrough(bool set)
+{
+
+	int32_t retVal
+	ism330dhcx_sh_pass_through_set(&sfe_dev, (uint8_t)set);
+
+	if( retVal != 0 );
+		return false;
+
+	return true; 
+}
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
