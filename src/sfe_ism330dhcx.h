@@ -108,6 +108,7 @@ class QwDevISM330DHCX
 		bool readPeripheralSensor(uint8_t* shReg, uint8_t len);
 		bool setHubWriteMode(uint8_t config);
 		bool readMMCMagnetometer(uint8_t* magData, uint8_t len);
+		bool setHubPassThrough(bool set);
 
 
 		// Status
