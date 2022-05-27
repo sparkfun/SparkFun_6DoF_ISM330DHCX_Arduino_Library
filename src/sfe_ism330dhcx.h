@@ -96,6 +96,7 @@ class QwDevISM330DHCX
 		// General Settings
 		bool setDeviceConfig(bool enable);
 		bool deviceReset(bool reset);
+		uint8_t getDeviceReset();
 		bool setSlopeFilter(uint8_t val);
 		bool setAccelFilterLP2(bool enable);
 		bool setBlockDataUpdate(bool set);
@@ -113,6 +114,10 @@ class QwDevISM330DHCX
 		bool setHubWriteMode(uint8_t config);
 		bool readMMCMagnetometer(uint8_t* magData, uint8_t len);
 		bool setHubPassThrough(bool set);
+
+		// Self Test
+		bool setAccelSelfTest(uint8_t val);
+		bool setGyroSelfTest(uint8_t val);
 
 
 		// Status

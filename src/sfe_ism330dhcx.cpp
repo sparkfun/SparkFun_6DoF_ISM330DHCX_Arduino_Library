@@ -377,6 +377,19 @@ bool QwDevISM330DHCX::deviceReset(bool reset)
 	return true;
 }
 
+uint8_t QwDevISM330DHCX::getDeviceReset()
+{
+
+	int32_t retVal;
+	uint8_t tempVal;
+	retVal = ism330dhcx_reset_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return 0;
+
+	return tempVal;
+}
+
 bool QwDevISM330DHCX::setSlopeFilter(uint8_t val)
 {
 	int32_t retVal;
@@ -609,6 +622,52 @@ bool QwDevISM330DHCX::setHubPassThrough(bool set)
 		return false;
 
 	return true; 
+}
+//
+//
+//////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////
+// Self Test
+//
+// 
+//
+//
+//  
+// 
+// 
+
+bool QwDevISM330DHCX::setAccelSelfTest(uint8_t val)
+{
+	int32_t retVal;
+
+	if( val > 2)
+		return false;
+
+	retVal = ism330dhcx_xl_self_test_set(&sfe_dev,
+                                    (ism330dhcx_st_xl_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setGyroSelfTest(uint8_t val)
+{
+	int32_t retVal;
+
+	// 0, 1, or 3
+	if( val > 3)
+		return false;
+
+	retVal = ism330dhcx_gy_self_test_set(&sfe_dev,
+                                    (ism330dhcx_st_g_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
 }
 //
 //
