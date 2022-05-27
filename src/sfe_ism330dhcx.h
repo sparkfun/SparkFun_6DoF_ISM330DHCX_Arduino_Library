@@ -94,11 +94,15 @@ class QwDevISM330DHCX
 		bool getGyro(sfe_ism_data_t* gyroData);
 
 		// General Settings
+		bool setDeviceConfig(bool enable);
+		bool deviceReset(bool reset);
+		bool setSlopeFilter(uint8_t val);
+		bool setAccelFilterLP2(bool enable);
+		bool setBlockDataUpdate(bool set);
+		uint8_t getBlockDataUpdate();
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
 		bool setAccelStatustoInt();
-		bool setBlockDataUpdate(bool set);
-		uint8_t getBlockDataUpdate();
 		
 		// Sensor Hub Settings
 		bool setHubODR(uint8_t rate);

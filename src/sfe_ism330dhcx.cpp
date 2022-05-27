@@ -351,6 +351,58 @@ float QwDevISM330DHCX::convertToCelsius(int16_t data)
 //  
 // 
 // 
+//
+
+bool QwDevISM330DHCX::setDeviceConfig(bool enable)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_device_conf_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::deviceReset(bool reset)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_reset_set(&sfe_dev, (uint8_t)reset);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setSlopeFilter(uint8_t val)
+{
+	int32_t retVal;
+	if( val > 7 )
+		return false;
+
+	retVal = ism330dhcx_xl_hp_path_on_out_set(&sfe_dev,
+                                         (ism330dhcx_hp_slope_xl_en_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setAccelFilterLP2(bool enable)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_xl_filter_lp2_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
 
 bool QwDevISM330DHCX::setBlockDataUpdate(bool set)
 {
