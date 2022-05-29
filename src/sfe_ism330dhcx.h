@@ -105,6 +105,9 @@ class QwDevISM330DHCX
 		bool setGyroDataRate(uint8_t rate);
 		bool setAccelStatustoInt();
 		
+		// FIFO Settings
+		bool setFifoWatermark(uint16_t val);
+			
 		// Sensor Hub Settings
 		bool setHubODR(uint8_t rate);
 		bool setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
