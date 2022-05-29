@@ -94,8 +94,8 @@ class QwDevISM330DHCX
 		bool getGyro(sfe_ism_data_t* gyroData);
 
 		// General Settings
-		bool setDeviceConfig(bool enable);
-		bool deviceReset(bool reset);
+		bool setDeviceConfig(bool enable = true);
+		bool deviceReset();
 		uint8_t getDeviceReset();
 		bool setSlopeFilter(uint8_t val);
 		bool setAccelFilterLP2(bool enable);
@@ -104,9 +104,15 @@ class QwDevISM330DHCX
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
 		bool setAccelStatustoInt();
+		bool enableTimestamp(bool enable = true);
+		bool resetTimestamp();
 		
 		// FIFO Settings
 		bool setFifoWatermark(uint16_t val);
+		bool setFifoMode(uint8_t val);
+		bool setAccelFifoBatchSet(uint8_t val);
+		bool setGyroFifoBatchSet(uint8_t val);
+		bool setFifoTimestampDec(uint8_t val);
 			
 		// Sensor Hub Settings
 		bool setHubODR(uint8_t rate);
@@ -117,6 +123,7 @@ class QwDevISM330DHCX
 		bool setHubWriteMode(uint8_t config);
 		bool readMMCMagnetometer(uint8_t* magData, uint8_t len);
 		bool setHubPassThrough(bool set);
+		bool setHubFifoBatching(bool enable = true);
 
 		// Self Test
 		bool setAccelSelfTest(uint8_t val);

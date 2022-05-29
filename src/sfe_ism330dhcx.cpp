@@ -365,11 +365,11 @@ bool QwDevISM330DHCX::setDeviceConfig(bool enable)
 	return true;
 }
 
-bool QwDevISM330DHCX::deviceReset(bool reset)
+bool QwDevISM330DHCX::deviceReset()
 {
 	int32_t retVal;
 
-	retVal = ism330dhcx_reset_set(&sfe_dev, (uint8_t)reset);
+	retVal = ism330dhcx_reset_set(&sfe_dev, 1);
 
 	if( retVal != 0 )
 		return false;
@@ -477,12 +477,35 @@ bool QwDevISM330DHCX::setAccelStatustoInt()
 	return true; 
 }
 
+bool QwDevISM330DHCX::enableTimestamp(bool enable)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_timestamp_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::resetTimestamp()
+{
+	int32_t retVal; 
+
+	retVal = ism330dhcx_timestamp_rst(&sfe_dev);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////
-// Sensor Hub Settings
+// FIFO Settings
 //
 // 
 //
@@ -495,6 +518,68 @@ bool QwDevISM330DHCX::setFifoWatermark(uint16_t val)
 	int32_t retVal;
 
 	retVal = ism330dhcx_fifo_watermark_set(&sfe_dev, val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setFifoMode(uint8_t val)
+{
+	int32_t retVal;
+
+	if( val > 7 )
+		return false;
+
+	retVal = ism330dhcx_fifo_mode_set(&sfe_dev,
+                                 (ism330dhcx_fifo_mode_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setAccelFifoBatchSet(uint8_t val)
+{
+	int32_t retVal;
+	if( val > 11)
+		return false;
+
+	retVal = ism330dhcx_fifo_xl_batch_set(&sfe_dev,
+                                     (ism330dhcx_bdr_xl_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+
+bool QwDevISM330DHCX::setGyroFifoBatchSet(uint8_t val)
+{
+	int32_t retVal;
+	if( val > 11)
+		return false;
+
+	retVal = ism330dhcx_fifo_gy_batch_set(&sfe_dev,
+                                     (ism330dhcx_bdr_gy_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
+{
+	int32_t retVal;
+	if( val > 3 )
+		return false;
+
+	retVal = ism330dhcx_fifo_timestamp_decimation_set(&sfe_dev,
+                                                   (ism330dhcx_odr_ts_batch_t)val);
 
 	if( retVal != 0 )
 		return false;
@@ -648,6 +733,18 @@ bool QwDevISM330DHCX::setHubPassThrough(bool set)
 		return false;
 
 	return true; 
+}
+
+bool QwDevISM330DHCX::setHubFifoBatching(bool enable)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_sh_batch_slave_0_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
 }
 //
 //
