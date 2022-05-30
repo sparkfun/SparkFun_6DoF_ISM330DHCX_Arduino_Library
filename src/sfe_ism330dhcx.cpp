@@ -464,18 +464,6 @@ bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
 }
 
 
-bool QwDevISM330DHCX::setAccelStatustoInt()
-{
-
-	ism330dhcx_pin_int1_route_t intToPin = {1}; 
-	
-	int32_t retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &intToPin);
-
-	if( retVal != 0 )
-		return false;
-
-	return true; 
-}
 
 bool QwDevISM330DHCX::enableTimestamp(bool enable)
 {
@@ -585,6 +573,46 @@ bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
 		return false;
 
 	return true;
+}
+
+//
+//
+//////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////
+// Interrupt Settings
+//
+// 
+//
+//
+//  
+// 
+bool QwDevISM330DHCX::setIntNotification(uint8_t val)
+{
+	int32_t retVal;
+	if( val > 4)
+		return false;
+
+	retVal = ism330dhcx_int_notification_set(&sfe_dev,
+                                        (ism330dhcx_lir_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setAccelStatustoInt()
+{
+
+	ism330dhcx_pin_int1_route_t intToPin = {1}; 
+	
+	int32_t retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &intToPin);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
 }
 
 //

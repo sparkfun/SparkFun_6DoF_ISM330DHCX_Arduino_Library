@@ -103,9 +103,13 @@ class QwDevISM330DHCX
 		uint8_t getBlockDataUpdate();
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
-		bool setAccelStatustoInt();
 		bool enableTimestamp(bool enable = true);
 		bool resetTimestamp();
+
+		// Interrupt Settings
+		
+		bool setAccelStatustoInt();
+		bool setIntNotification(uint8_t val);
 		
 		// FIFO Settings
 		bool setFifoWatermark(uint16_t val);
