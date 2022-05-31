@@ -605,9 +605,11 @@ bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 bool QwDevISM330DHCX::setAccelStatustoInt()
 {
 
+	int32_t retVal;
+
 	ism330dhcx_pin_int1_route_t intToPin = {1}; 
 	
-	int32_t retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &intToPin);
+	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &intToPin);
 
 	if( retVal != 0 )
 		return false;
@@ -615,6 +617,37 @@ bool QwDevISM330DHCX::setAccelStatustoInt()
 	return true; 
 }
 
+bool QwDevISM330DHCX::setAccelStatustoInt2()
+{
+
+	int32_t retVal;
+
+	ism330dhcx_pin_int2_route_t intToPin = {1}; 
+	
+	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &intToPin);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setDataReadyMode(uint8_t val)
+{
+	int32_t retVal;
+
+	//0 = Latched, 1 = Pulsed
+	if( val > 1 )
+		return false;
+
+	retVal = ism330dhcx_data_ready_mode_set(&sfe_dev,
+                                       (ism330dhcx_dataready_pulsed_t)val);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
