@@ -22,6 +22,9 @@ void setup(){
 		delay(1);
 	} 
 
+	Serial.println("Reset.");
+	Serial.println("Applying settings.");
+	delay(100);
 	
 	myISM.setDeviceConfig();
 	myISM.setBlockDataUpdate();

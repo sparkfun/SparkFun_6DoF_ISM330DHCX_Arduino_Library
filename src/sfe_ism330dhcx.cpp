@@ -377,7 +377,7 @@ bool QwDevISM330DHCX::deviceReset()
 	return true;
 }
 
-uint8_t QwDevISM330DHCX::getDeviceReset()
+bool QwDevISM330DHCX::getDeviceReset()
 {
 
 	int32_t retVal;
@@ -385,9 +385,14 @@ uint8_t QwDevISM330DHCX::getDeviceReset()
 	retVal = ism330dhcx_reset_get(&sfe_dev, &tempVal);
 
 	if( retVal != 0 )
-		return 0;
+		return false;
 
-	return tempVal;
+	if( (tempVal & 0x01) == 0x00 ){
+		return true; 
+	}
+
+	return false; 
+	
 }
 
 bool QwDevISM330DHCX::setSlopeFilter(uint8_t val)

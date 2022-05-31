@@ -96,7 +96,7 @@ class QwDevISM330DHCX
 		// General Settings
 		bool setDeviceConfig(bool enable = true);
 		bool deviceReset();
-		uint8_t getDeviceReset();
+		bool getDeviceReset();
 		bool setSlopeFilter(uint8_t val);
 		bool setAccelFilterLP2(bool enable = true);
 		bool setBlockDataUpdate(bool set = true);
