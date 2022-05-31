@@ -98,8 +98,8 @@ class QwDevISM330DHCX
 		bool deviceReset();
 		uint8_t getDeviceReset();
 		bool setSlopeFilter(uint8_t val);
-		bool setAccelFilterLP2(bool enable);
-		bool setBlockDataUpdate(bool set);
+		bool setAccelFilterLP2(bool enable = true);
+		bool setBlockDataUpdate(bool set = true);
 		uint8_t getBlockDataUpdate();
 		bool setAccelDataRate(uint8_t rate);
 		bool setGyroDataRate(uint8_t rate);
