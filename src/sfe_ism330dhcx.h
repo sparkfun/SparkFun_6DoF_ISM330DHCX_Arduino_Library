@@ -1,5 +1,6 @@
 #include "qwiic_i2c.h"
 #include "sfe_ism_shim.h"
+#include "sfe_ism330dhcx_defs.h"
 
 
 #define ISM330DHCX_ADDRESS_LOW 0x6A

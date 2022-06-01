@@ -29,12 +29,12 @@ void setup(){
 	myISM.setDeviceConfig();
 	myISM.setBlockDataUpdate();
 	
-	myISM.setAccelDataRate(4);
-	myISM.setGyroDataRate(4);
-	myISM.setAccelFullScale(2); 
-	myISM.setGyroFullScale(2); 
+	myISM.setAccelDataRate(ISM_XL_ODR_104Hz);
+	myISM.setGyroDataRate(ISM_GY_ODR_104Hz);
+	myISM.setAccelFullScale(ISM_4g); 
+	myISM.setGyroFullScale(ISM_500dps); 
 
-	myISM.setSlopeFilter(4);
+	myISM.setSlopeFilter(ISM_LP_ODR_DIV_100);
 	myISM.setAccelFilterLP2();
 
 
