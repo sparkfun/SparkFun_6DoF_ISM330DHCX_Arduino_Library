@@ -108,10 +108,13 @@ class QwDevISM330DHCX
 		bool resetTimestamp();
 
 		// Interrupt Settings
-		bool setAccelStatustoInt();
+		bool setAccelStatustoInt1();
 		bool setAccelStatustoInt2();
+		bool setGyroStatustoInt1();
+		bool setGyroStatustoInt2();
 		bool setIntNotification(uint8_t val);
 		bool setDataReadyMode(uint8_t val);
+		bool setPinMode(bool openDrain = true);
 		
 		// FIFO Settings
 		bool setFifoWatermark(uint16_t val);

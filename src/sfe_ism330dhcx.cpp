@@ -592,6 +592,21 @@ bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
 //
 //  
 // 
+
+
+bool QwDevISM330DHCX::setPinMode(bool openDrain )
+{
+	int32_t retVal;
+
+	//0 = push-pull, active high, 1 = open-drain, active low
+	retVal = ism330dhcx_pin_mode_set(&sfe_dev, (ism330dhcx_pp_od_t)openDrain);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
 bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 {
 	int32_t retVal;
@@ -607,14 +622,15 @@ bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 	return true;
 }
 
-bool QwDevISM330DHCX::setAccelStatustoInt()
+bool QwDevISM330DHCX::setAccelStatustoInt1()
 {
 
 	int32_t retVal;
 
-	ism330dhcx_pin_int1_route_t intToPin = {1}; 
+	ism330dhcx_pin_int1_route_t int1_route; 
+	int1_route.int1_ctrl.int1_drdy_xl = 1;
 	
-	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &intToPin);
+	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
 	if( retVal != 0 )
 		return false;
@@ -627,9 +643,42 @@ bool QwDevISM330DHCX::setAccelStatustoInt2()
 
 	int32_t retVal;
 
-	ism330dhcx_pin_int2_route_t intToPin = {1}; 
+	ism330dhcx_pin_int2_route_t int2_route; 
+	int2_route.int2_ctrl.int2_drdy_xl = 1;
 	
-	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &intToPin);
+	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setGyroStatustoInt1()
+{
+
+	int32_t retVal;
+
+	ism330dhcx_pin_int1_route_t int1_route; 
+	int1_route.int1_ctrl.int1_drdy_g = 1;
+	
+	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setGyroStatustoInt2()
+{
+
+	int32_t retVal;
+
+	ism330dhcx_pin_int2_route_t int2_route; 
+	int2_route.int2_ctrl.int2_drdy_g = 1;
+	
+	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 
 	if( retVal != 0 )
 		return false;
