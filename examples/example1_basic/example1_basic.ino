@@ -30,15 +30,16 @@ void setup(){
 	myISM.setBlockDataUpdate();
 	
 	myISM.setAccelDataRate(ISM_XL_ODR_104Hz);
-	myISM.setGyroDataRate(ISM_GY_ODR_104Hz);
 	myISM.setAccelFullScale(ISM_4g); 
+
 	myISM.setGyroFullScale(ISM_500dps); 
+	myISM.setGyroDataRate(ISM_GY_ODR_104Hz);
 
 	myISM.setAccelFilterLP2();
 	myISM.setAccelSlopeFilter(ISM_LP_ODR_DIV_100);
 
 	myISM.setGyroFilterLP1();
-	myISM.setGyroLP1Bandwidth(ISM_VERY_LIGHT);
+	myISM.setGyroLP1Bandwidth(ISM_MEDIUM);
 
 
 }
