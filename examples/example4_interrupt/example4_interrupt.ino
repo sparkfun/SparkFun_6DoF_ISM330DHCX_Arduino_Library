@@ -38,8 +38,8 @@ void setup(){
 	myISM.setAccelFullScale(ISM_4g); 
 
 	/// Accelerometer filter settings
-	myISM.setSlopeFilter(ISM_LP_ODR_DIV_100);
 	myISM.setAccelFilterLP2();
+	myISM.setAccelSlopeFilter(ISM_LP_ODR_DIV_100);
 
 	// Accelerometer Interrupt Settings
 	myISM.setAccelStatustoInt1();

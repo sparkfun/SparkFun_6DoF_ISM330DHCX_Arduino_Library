@@ -395,7 +395,7 @@ bool QwDevISM330DHCX::getDeviceReset()
 	
 }
 
-bool QwDevISM330DHCX::setSlopeFilter(uint8_t val)
+bool QwDevISM330DHCX::setAccelSlopeFilter(uint8_t val)
 {
 	int32_t retVal;
 	if( val > 7 )
@@ -415,6 +415,33 @@ bool QwDevISM330DHCX::setAccelFilterLP2(bool enable)
 	int32_t retVal;
 
 	retVal = ism330dhcx_xl_filter_lp2_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setGyroFilterLP1(bool enable)
+{
+	int32_t retVal;
+
+	retVal = ism330dhcx_gy_filter_lp1_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevISM330DHCX::setGyroLP1Bandwidth(uint8_t val)
+{
+	int32_t retVal;
+	if( val > 7 )
+		return false;
+
+	retVal = ism330dhcx_gy_lp1_bandwidth_set(&sfe_dev, 
+																				  (ism330dhcx_ftype_t)val);
 
 	if( retVal != 0 )
 		return false;

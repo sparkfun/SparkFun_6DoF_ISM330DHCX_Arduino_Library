@@ -34,8 +34,11 @@ void setup(){
 	myISM.setAccelFullScale(ISM_4g); 
 	myISM.setGyroFullScale(ISM_500dps); 
 
-	myISM.setSlopeFilter(ISM_LP_ODR_DIV_100);
 	myISM.setAccelFilterLP2();
+	myISM.setAccelSlopeFilter(ISM_LP_ODR_DIV_100);
+
+	myISM.setGyroFilterLP1();
+	myISM.setGyroLP1Bandwidth(ISM_VERY_LIGHT);
 
 
 }
