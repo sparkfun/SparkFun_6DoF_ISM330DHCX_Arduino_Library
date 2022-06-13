@@ -1,4 +1,4 @@
-#include "qwiic_i2c.h"
+#include "sfe_bus.h"
 #include "sfe_ism_shim.h"
 #include "sfe_ism330dhcx_defs.h"
 
@@ -81,6 +81,8 @@ class QwDevISM330DHCX
 
     void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
 
+    void setCommunicationBus(SfeSPI &theBus, uint8_t idBus);
+
 		bool setAccelFullScale(uint8_t val);
 		bool setGyroFullScale(uint8_t val);
 		uint8_t getAccelFullScale();
@@ -162,7 +164,7 @@ class QwDevISM330DHCX
 
 	private: 
 
-		QwI2C *_i2cBus; 
+		SfeBus *_sfeBus; 
 		uint8_t _i2cAddress;
 		stmdev_ctx_t sfe_dev; 
 		uint8_t fullScaleAccel = 0; //Powered down by default
