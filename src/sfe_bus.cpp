@@ -1,4 +1,4 @@
-// qwiic_i2c.cpp
+// sfe_bus.cpp
 //
 // This is a library written for SparkFun Qwiic ISM330DHCX boards
 //
@@ -40,7 +40,7 @@
 
 // Class provide an abstract interface to the I2C device
 
-#include "qwiic_i2c.h"
+#include "sfe_bus.h"
 #include <Arduino.h>
 
 // What is the max buffer size for this platform.
@@ -62,9 +62,6 @@
 
 const static uint16_t kChunkSize = kMaxTransferBuffer;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructor
-
 QwI2C::QwI2C(void) : _i2cPort{nullptr}, _spiPort{nullptr}
 {
 }
@@ -85,20 +82,6 @@ bool QwI2C::init(TwoWire &wirePort, bool bInit)
         if (bInit)
             _i2cPort->begin();
     }
-
-    return true;
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//
-
-bool QwI2C::init(void)
-{
-    // do we already have a wire port?
-    if (!_i2cPort)
-        return init(Wire, true); // no wire, send in Wire and init it
 
     return true;
 }
@@ -262,40 +245,7 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, boo
 SfeSPI::SfeSPI(void) :  _spiPort{nullptr}
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// init()
-//
-// Methods to init/setup this device. The caller can provide a Wire Port, or this class
-// will use the default
 
-bool SfeSPI::init(SPIClass &spiPort, bool bInit)
-{
-
-    // if we don't have a wire port already
-    if (!_spiPort)
-    {
-        _spiPort = &spiPort;
-
-        if (bInit)
-            _spiPort->begin();
-    }
-
-    return true;
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//
-
-bool SfeSPI::init(void)
-{
-    // do we already have a wire port?
-    if (!_spiPort)
-        return init(SPI, true); // no wire, send in Wire and init it
-
-    return true;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // ping()

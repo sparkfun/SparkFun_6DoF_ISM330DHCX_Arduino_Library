@@ -1,4 +1,4 @@
-// qwiic_i2c.cpp
+// sfe_bus.cpp
 //
 // This is a library written for SparkFun Qwiic ISM330DHCX boards
 //
@@ -41,7 +41,6 @@
 // Class provide an abstract interface to the I2C device
 
 
-// Header for I2C driver object
 
 #pragma once
 
@@ -52,24 +51,19 @@
 // This class is focused on Aurduino..
 
 #include <Wire.h>
+#include <SPI.h>
+
 class SfeBus 
 {
 
 public:
     SfeBus(void);
 
-    bool init(void);
     virtual bool init(TwoWire& wirePort, bool bInit=false);
-    virtual bool init(SPIClass& i2cPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
-
-    // see if a device exists
+    virtual bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
     virtual bool ping(uint8_t address);
-
     virtual bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data);
-
-    // Write a block of bytes to the device --
     virtual int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length);
-
     virtual int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
 
 private:
@@ -85,7 +79,6 @@ class QwI2C : public SfeBus
 {
 	public: 
 
-		bool init(void);
 		bool init(TwoWire& wirePort, bool bInit=false);
 
 		bool ping(uint8_t address);
@@ -103,8 +96,7 @@ class SfeSPI : public SfeBus
 {
 	public:
 
-		bool init(void);
-		bool init(SPIClass& i2cPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
+		bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
 
 		bool ping(uint8_t address);
 
