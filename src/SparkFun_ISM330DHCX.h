@@ -33,7 +33,7 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
     {
         // Setup  I2C object and pass into the superclass
         _sfeBus.init(wirePort);
-        setCommunicationBus(_i2cBus, deviceAddress);
+        setCommunicationBus(_sfeBus, deviceAddress);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();
@@ -43,7 +43,7 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
     {
         // Setup  I2C object and pass into the superclass
         _sfeBus.init(spiPort, ismSPISettings, cs);
-        setCommunicationBus(_spiBus, deviceAddress);
+        setCommunicationBus(_sfeBus);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();

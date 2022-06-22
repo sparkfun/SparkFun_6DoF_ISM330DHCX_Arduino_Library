@@ -80,6 +80,7 @@ class QwDevISM330DHCX
     //
 
     void setCommunicationBus(SfeBus &theBus, uint8_t idBus);
+    void setCommunicationBus(SfeBus &theBus);
 
 		bool setAccelFullScale(uint8_t val);
 		bool setGyroFullScale(uint8_t val);
@@ -162,7 +163,6 @@ class QwDevISM330DHCX
 
 	private: 
 
-		SfeBus *_sfeBus; 
 		SfeSPI *_spiBus;
 		QwI2C *_i2cBus;
 		uint8_t _i2cAddress;
