@@ -55,14 +55,14 @@ bool QwDevISM330DHCX::isConnected()
 
 void QwDevISM330DHCX::setCommunicationBus(SfeBus &theBus, uint8_t idBus)
 {
-    theBus = _i2cBus;
+    &theBus = _i2cBus;
     _i2cAddress = idBus;
 }
 
 
 void QwDevISM330DHCX::setCommunicationBus(SfeBus &theBus)
 {
-    theBus = _spiBus ;
+    &theBus = _spiBus ;
 }
 
 
