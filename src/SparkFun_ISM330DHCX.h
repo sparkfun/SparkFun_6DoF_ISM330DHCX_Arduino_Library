@@ -33,22 +33,22 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
     bool begin(TwoWire &wirePort, uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
     {
         // Setup  I2C object and pass into the superclass
-        setCommunicationBus(_sfeBus, deviceAddress);
+        setCommunicationBus(deviceAddress);
         _sfeBus.init(wirePort);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();
     }
 
-		bool beginSPI(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs)
-    {
-        // Setup  I2C object and pass into the superclass
-        setCommunicationBus(_sfeBus);
-        _sfeBus.init(spiPort, ismSPISettings, cs);
+		//bool beginSPI(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs)
+    //{
+    //    // Setup  I2C object and pass into the superclass
+    //    setCommunicationBus(_sfeBus);
+    //    _sfeBus.init(spiPort, ismSPISettings, cs);
 
-        // Initialize the system - return results
-        return this->QwDevISM330DHCX::init();
-    }
+    //    // Initialize the system - return results
+    //    return this->QwDevISM330DHCX::init();
+    //}
     ///////////////////////////////////////////////////////////////////////
     // begin()
     //
@@ -57,13 +57,13 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
     // User doesn't provide a wireport object.
     bool begin(uint8_t deviceAddress =  ISM330DHCX_ADDRESS_HIGH)
     {
-        setCommunicationBus(_sfeBus, deviceAddress);
+        setCommunicationBus(deviceAddress);
         _sfeBus.init();
         return this->QwDevISM330DHCX::init();
     }
 
 	private: 
 	
-		SfeBus _sfeBus; 
+//		SfeBus _sfeBus; 
 
 };
