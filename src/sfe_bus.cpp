@@ -62,7 +62,7 @@
 
 const static uint16_t kChunkSize = kMaxTransferBuffer;
 
-QwI2C::QwI2C(void) : _i2cPort{nullptr}, _spiPort{nullptr}
+QwI2C::QwI2C(void) : _i2cPort{nullptr}
 {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,8 +228,8 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, boo
     }
 
 
-		if( !ismSPISettings )
-			_sfeSPISettings = SPISettings(1000000, MSB_FIRST, SPI_MODE0);
+		if( ismSPISettings == NULL )
+			_sfeSPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
 		else
 			_sfeSPISettings = ismSPISettings;
 
@@ -242,7 +242,7 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, boo
 }
 
 
-SfeSPI::SfeSPI(void) :  _spiPort{nullptr}
+SfeSPI::SfeSPI(void) : _spiPort{nullptr}
 {
 }
 
@@ -316,8 +316,8 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
 
     _spiPort->beginTransaction(_sfeSPISettings);
 		digitalWrite(_cs, LOW);
-		offset = offset | SPI_READ;
-    _spiPort->transfer(offset);
+		reg = reg | SPI_READ;
+    _spiPort->transfer(reg);
 
 		for(i = 0; i < numBytes; i++)
 		{

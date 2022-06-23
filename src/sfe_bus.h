@@ -57,9 +57,8 @@ class SfeBus
 {
 
 public:
-    SfeBus(void);
 
-    virtual bool init(TwoWire& wirePort, bool bInit=false);
+    virtual bool init(TwoWire& wirePort = Wire, bool bInit=false);
     virtual bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
     virtual bool ping(uint8_t address);
     virtual bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data);
@@ -68,10 +67,6 @@ public:
 
 private:
 
-    TwoWire* _i2cPort;
-		SPIClass* _spiPort; 
-		SPISettings _sfeSPISettings; 
-		uint8_t _cs; 
 
 };
 
@@ -79,7 +74,9 @@ class QwI2C : public SfeBus
 {
 	public: 
 
-		bool init(TwoWire& wirePort, bool bInit=false);
+		QwI2C(void);
+
+		bool init(TwoWire& wirePort = Wire, bool bInit=false);
 
 		bool ping(uint8_t address);
 
@@ -90,11 +87,15 @@ class QwI2C : public SfeBus
 		int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
 
 	private: 
-}
+
+    TwoWire* _i2cPort;
+};
 
 class SfeSPI : public SfeBus
 {
 	public:
+
+		SfeSPI(void);
 
 		bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
 
@@ -107,5 +108,9 @@ class SfeSPI : public SfeBus
 		int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
 
 	private:
-}
+
+		SPIClass* _spiPort; 
+		SPISettings _sfeSPISettings; 
+		uint8_t _cs; 
+};
 

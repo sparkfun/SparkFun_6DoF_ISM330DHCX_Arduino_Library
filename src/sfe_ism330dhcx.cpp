@@ -11,7 +11,7 @@
 bool QwDevISM330DHCX::init(void)
 {
     //  do we have a bus yet? is the device connected?
-    if (!_sfeBus || !_i2cAddress || !_sfeBus->ping(_i2cAddress))
+    if (_sfeBus != NULL || !_i2cAddress || !_sfeBus->ping(_i2cAddress))
         return false;
 		
 		// Setup the struct needed by the C source files for reading and writing.
@@ -55,14 +55,14 @@ bool QwDevISM330DHCX::isConnected()
 
 void QwDevISM330DHCX::setCommunicationBus(SfeBus &theBus, uint8_t idBus)
 {
-    &theBus = _i2cBus;
+    _i2cBus = theBus;
     _i2cAddress = idBus;
 }
 
 
 void QwDevISM330DHCX::setCommunicationBus(SfeBus &theBus)
 {
-    &theBus = _spiBus ;
+    _spiBus = theBus ;
 }
 
 
