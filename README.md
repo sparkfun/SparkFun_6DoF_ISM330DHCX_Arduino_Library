@@ -5,8 +5,11 @@
 
 [*SparkFun Qwiic 6DoF - ISM330DHCX (19764)*](https://www.sparkfun.com/products/19764)
 
-<Basic description of the part.>
+Do you need 6 degrees of freedom? We do! Behold the SparkFun Qwiic 6DoF - ISM330DHCX - a Qwiic enabled 1x1" breakout featuring STMicroelectronics' ISM330DHCX; a high-performance 3D digital accelerometer and 3D digital gyroscope tailored for Industry 4.0 applications such as platform, optical image, and lens stabilization, robotics and industrial automation, navigations systems, and vibration monitoring and compensation. 
 
+This bad boy has a full-scale acceleration range of ±2/±4/±8/±16 g and a wide angular rate range of ±125/±250/±500/±1000/±2000/±4000 dps that enable its usage in a broad range of applications. Multiple modes allow for peripheral only, secondary I<sup>2</sup>C, and and auxiliary 3 or 4 wire serial interface. An unmatched set of embedded features (Machine Learning Core, programmable FSM, FIFO, sensor hub, event decoding and interrupts) are enablers for implementing smart and complex sensor nodes which deliver high performance at very low power.  
+
+The dual Qwiic connectors on this little breakout make setting it up a breeze. Simply supply the accelerometer with power and communication via the Qwiic connector to your chosen Qwiic development board and you will be good to go. Should you prefer to use them, we've also broken out all the ISM330DHCX pin functionality to GPIO along either side of the board. 
 Repository Contents
 -------------------
 
