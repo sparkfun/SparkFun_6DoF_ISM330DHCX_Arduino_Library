@@ -79,8 +79,8 @@ class QwDevISM330DHCX
     //  idBus        The bus ID for the target device.
     //
 
-		void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
-		void setCommunicationBus(SfeSPI &theBus, uint8_t cs);
+		void setCommunicationBus(QwI2C &theBus);
+		void setCommunicationBus(SfeSPI &theBus);
     //void setCommunicationBus(SfeBus &theBus);
 
 		bool setAccelFullScale(uint8_t val);
@@ -165,6 +165,7 @@ class QwDevISM330DHCX
 	private: 
 
 		
+		SfeBus *_sfeBus; 
 		uint8_t _i2cAddress;
 		uint8_t _cs;
 		stmdev_ctx_t sfe_dev; 

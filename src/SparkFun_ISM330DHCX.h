@@ -1,5 +1,6 @@
 #pragma once
 #include "sfe_ism330dhcx.h"
+#include "sfe_bus.h"
 #include <Wire.h>
 #include <SPI.h>
 
@@ -33,8 +34,8 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
     bool begin(TwoWire &wirePort, uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
     {
         // Setup  I2C object and pass into the superclass
-        setCommunicationBus(deviceAddress);
-        _sfeBus.init(wirePort);
+        setCommunicationBus(_i2cBus);
+        _i2cBus.init(wirePort, deviceAddress);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();
@@ -55,23 +56,16 @@ class SparkFun_ISM330DHCX_SPI : public QwDevISM330DHCX
     bool begin(SPIClass &spiPort, SPISettings ismSettings, uint8_t cs)
     {
         // Setup  I2C object and pass into the superclass
-        setCommunicationBus(cs);
-        _sfeBus.init(spiPort);
+        setCommunicationBus(_spiBus);
+        _spiBus.init(spiPort, ismSettings, cs);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();
     }
 
-    bool begin(uint8_t deviceAddress =  cs)
-    {
-        setCommunicationBus(cs);
-        _sfeBus.init();
-        return this->QwDevISM330DHCX::init();
-    }
-
 		private:
 
-		SfeSpi _spiBus;
+		SfeSPI _spiBus;
 
 
 };

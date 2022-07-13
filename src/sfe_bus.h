@@ -54,7 +54,25 @@
 #include <SPI.h>
 
 
-class QwI2C 
+class SfeBus 
+{
+	public: 
+
+		//virtual bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false) = 0;
+
+		virtual bool init(TwoWire& wirePort = Wire, bool bInit=false) = 0;
+
+		virtual bool ping(uint8_t address) = 0;
+
+		virtual	bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data) = 0;
+
+		virtual int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length) = 0;
+
+		virtual int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes) = 0;
+
+};
+
+class QwI2C : public SfeBus
 {
 	public: 
 
@@ -75,7 +93,7 @@ class QwI2C
     TwoWire* _i2cPort;
 };
 
-class SfeSPI
+class SfeSPI : public SfeBus
 {
 	public:
 
