@@ -210,122 +210,122 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
     return 0; // Success
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 // SPI init()
 //
 // Methods to init/setup this device. The caller can provide a Wire Port, or this class
 // will use the default
-//bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit)
-//{
+bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit)
+{
+
+    // if we don't have a wire port already
+    if( !_spiPort )
+    {
+        _spiPort = &spiPort;
+
+        if( bInit )
+            _spiPort->begin();
+    }
+
+
+		if( ismSPISettings == NULL )
+			_sfeSPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
+		else
+			_sfeSPISettings = ismSPISettings;
+
+		if( !cs )
+			return false; 
+		
+		_cs = cs;
+
+    return true;
+}
+
+
+SfeSPI::SfeSPI(void) : _spiPort{nullptr}
+{
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// ping()
 //
-//    // if we don't have a wire port already
-//    if( !_spiPort )
-//    {
-//        _spiPort = &spiPort;
+// Is a device connected?
+bool SfeSPI::ping(uint8_t i2c_address)
+{
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// writeRegisterByte()
 //
-//        if( bInit )
-//            _spiPort->begin();
-//    }
+// Write a byte to a register
+
+bool SfeSPI::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataToWrite)
+{
+
+    if (!_spiPort)
+        return false;
+
+    _spiPort->beginTransaction(_sfeSPISettings);
+		digitalWrite(_cs, LOW);
+    _spiPort->transfer(offset);
+    _spiPort->transfer(dataToWrite);
+		digitalWrite(_cs, HIGH);
+    _spiPort->endTransaction();
+
+		return true;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// writeRegisterRegion()
+//
+// Write a block of data to a device.
+
+int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
+{
+
+		int i;
+
+    _spiPort->beginTransaction(_sfeSPISettings);
+		digitalWrite(_cs, LOW);
+    _spiPort->transfer(offset);
+
+		for(i = 0; i < length; i++)
+		{
+			_spiPort->transfer(*data++);
+		}
+
+		digitalWrite(_cs, HIGH);
+    _spiPort->endTransaction();
+		return 0; 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// readRegisterRegion()
+//
+// Reads a block of data from the register on the device.
 //
 //
-//		if( ismSPISettings == NULL )
-//			_sfeSPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
-//		else
-//			_sfeSPISettings = ismSPISettings;
 //
-//		if( !cs )
-//			return false; 
-//		
-//		_cs = cs;
-//
-//    return true;
-//}
-//
-//
-//SfeSPI::SfeSPI(void) : _spiPort{nullptr}
-//{
-//}
-//
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//// ping()
-////
-//// Is a device connected?
-//bool SfeSPI::ping(uint8_t i2c_address)
-//{
-//	return true;
-//}
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//// writeRegisterByte()
-////
-//// Write a byte to a register
-//
-//bool SfeSPI::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataToWrite)
-//{
-//
-//    if (!_spiPort)
-//        return false;
-//
-//    _spiPort->beginTransaction(_sfeSPISettings);
-//		digitalWrite(_cs, LOW);
-//    _spiPort->transfer(offset);
-//    _spiPort->transfer(dataToWrite);
-//		digitalWrite(_cs, HIGH);
-//    _spiPort->endTransaction();
-//
-//		return true;
-//}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//// writeRegisterRegion()
-////
-//// Write a block of data to a device.
-//
-//int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
-//{
-//
-//		int i;
-//
-//    _spiPort->beginTransaction(_sfeSPISettings);
-//		digitalWrite(_cs, LOW);
-//    _spiPort->transfer(offset);
-//
-//		for(i = 0; i < length; i++)
-//		{
-//			_spiPort->transfer(*data++);
-//		}
-//
-//		digitalWrite(_cs, HIGH);
-//    _spiPort->endTransaction();
-//		return 0; 
-//}
-//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//// readRegisterRegion()
-////
-//// Reads a block of data from the register on the device.
-////
-////
-////
-//int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
-//{
-//    if (!_spiPort)
-//        return -1;
-//
-//    int i;                   // counter in loop
-//
-//    _spiPort->beginTransaction(_sfeSPISettings);
-//		digitalWrite(_cs, LOW);
-//		reg = reg | SPI_READ;
-//    _spiPort->transfer(reg);
-//
-//		for(i = 0; i < numBytes; i++)
-//		{
-//			*data++ = _spiPort->transfer(0x00);
-//		}
-//
-//		digitalWrite(_cs, HIGH);
-//    _spiPort->endTransaction();
-//		return 0; 
-//
-//}
+int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
+{
+    if (!_spiPort)
+        return -1;
+
+    int i;                   // counter in loop
+
+    _spiPort->beginTransaction(_sfeSPISettings);
+		digitalWrite(_cs, LOW);
+		reg = reg | SPI_READ;
+    _spiPort->transfer(reg);
+
+		for(i = 0; i < numBytes; i++)
+		{
+			*data++ = _spiPort->transfer(0x00);
+		}
+
+		digitalWrite(_cs, HIGH);
+    _spiPort->endTransaction();
+		return 0; 
+
+}

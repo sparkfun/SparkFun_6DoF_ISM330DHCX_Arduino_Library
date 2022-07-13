@@ -32,7 +32,7 @@ class QwDevISM330DHCX
 {
 	public: 
 
-		QwDevISM330DHCX() : _i2cBus{nullptr}, _i2cAddress{0} {};
+		QwDevISM330DHCX() : _i2cAddress{0}, _cs{0} {};
 			
 
     ///////////////////////////////////////////////////////////////////////
@@ -79,7 +79,8 @@ class QwDevISM330DHCX
     //  idBus        The bus ID for the target device.
     //
 
-    void setCommunicationBus(uint8_t idBus);
+		void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
+		void setCommunicationBus(SfeSPI &theBus, uint8_t cs);
     //void setCommunicationBus(SfeBus &theBus);
 
 		bool setAccelFullScale(uint8_t val);
@@ -161,12 +162,11 @@ class QwDevISM330DHCX
 		float convert4000dpsToMdps(int16_t data);
 		float convertToCelsius(int16_t data);
 
-		SfeBus _sfeBus; 
 	private: 
 
-//		SfeSPI *_spiBus;
-		QwI2C *_i2cBus;
+		
 		uint8_t _i2cAddress;
+		uint8_t _cs;
 		stmdev_ctx_t sfe_dev; 
 		uint8_t fullScaleAccel = 0; //Powered down by default
 		uint8_t fullScaleGyro = 0;  //Powered down by default

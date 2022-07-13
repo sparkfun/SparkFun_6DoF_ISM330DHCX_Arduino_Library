@@ -40,30 +40,38 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
         return this->QwDevISM330DHCX::init();
     }
 
-		//bool beginSPI(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs)
-    //{
-    //    // Setup  I2C object and pass into the superclass
-    //    setCommunicationBus(_sfeBus);
-    //    _sfeBus.init(spiPort, ismSPISettings, cs);
+	private: 
 
-    //    // Initialize the system - return results
-    //    return this->QwDevISM330DHCX::init();
-    //}
-    ///////////////////////////////////////////////////////////////////////
-    // begin()
-    //
-    // Version 2:
-    //
-    // User doesn't provide a wireport object.
-    bool begin(uint8_t deviceAddress =  ISM330DHCX_ADDRESS_HIGH)
+		QwI2C _i2cBus; 
+
+};
+	
+class SparkFun_ISM330DHCX_SPI : public QwDevISM330DHCX
+{
+		public:
+
+		SparkFun_ISM330DHCX_SPI() {};
+
+    bool begin(SPIClass &spiPort, SPISettings ismSettings, uint8_t cs)
     {
-        setCommunicationBus(deviceAddress);
+        // Setup  I2C object and pass into the superclass
+        setCommunicationBus(cs);
+        _sfeBus.init(spiPort);
+
+        // Initialize the system - return results
+        return this->QwDevISM330DHCX::init();
+    }
+
+    bool begin(uint8_t deviceAddress =  cs)
+    {
+        setCommunicationBus(cs);
         _sfeBus.init();
         return this->QwDevISM330DHCX::init();
     }
 
-	private: 
-	
-//		SfeBus _sfeBus; 
+		private:
+
+		SfeSpi _spiBus;
+
 
 };

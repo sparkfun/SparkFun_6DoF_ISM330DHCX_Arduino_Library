@@ -53,10 +53,22 @@ bool QwDevISM330DHCX::isConnected()
 //  theBus       The communication bus object
 //  idBus        The id/address of the device on the bus
 
+void QwDevISM330DHCX::setCommunicationBus(QwI2C &theBus, uint8_t idBus)
+{
+    _sfeBus = &theBus;
+    _i2cAddress = idBus;
+}
+
 void QwDevISM330DHCX::setCommunicationBus(uint8_t idBus)
 {
-    _sfeBus = &_i2cBus;
+    _sfeBus = &theBus;
     _i2cAddress = idBus;
+}
+
+void QwDevISM330DHCX::setCommunicationBus(SfeSPI &theBus, uint8_t cs)
+{
+    _sfeBus = &theBus;
+    _cs = cs;
 }
 
 
