@@ -99,7 +99,7 @@ class SfeSPI : public QwIDeviceBus
 
 		//bool init();
 
-		bool init(SPIClass& spiPort, uint8_t cs, bool bInit=false);
+		bool init(uint8_t cs, bool bInit=false);
 
 		bool init(SPIClass& spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit=false);
 

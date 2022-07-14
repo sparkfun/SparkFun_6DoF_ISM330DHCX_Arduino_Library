@@ -217,6 +217,10 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
 
 
 
+SfeSPI::SfeSPI(void) : _spiPort{nullptr}
+{
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // SPI init()
 //
@@ -245,16 +249,12 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  b
     return true;
 }
 
-bool SfeSPI::init(SPIClass &spiPort, uint8_t cs,  bool bInit)
+bool SfeSPI::init(uint8_t cs,  bool bInit)
 {
 
 		SPISettings spiSettings = SPISettings(1000000, MSBFIRST, SPI_MODE0); 
-		return init(spiPort, spiSettings, cs, bInit);
+		return init(SPI, spiSettings, cs, bInit);
 
-}
-
-SfeSPI::SfeSPI(void) : _spiPort{nullptr}
-{
 }
 
 
@@ -327,7 +327,7 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
 
     _spiPort->beginTransaction(_sfeSPISettings);
 		digitalWrite(_cs, LOW);
-		reg = reg | SPI_READ;
+		reg = (reg | SPI_READ);
     _spiPort->transfer(reg);
 
 		for(i = 0; i < numBytes; i++)

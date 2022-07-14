@@ -63,11 +63,11 @@ class SparkFun_ISM330DHCX_SPI : public QwDevISM330DHCX
 
 		SparkFun_ISM330DHCX_SPI() {};
 
-    bool begin(SPIClass &spiPort, uint8_t cs)
+    bool begin(uint8_t cs)
     {
         // Setup  I2C object and pass into the superclass
         setCommunicationBus(_spiBus);
-        _spiBus.init(spiPort, cs, true);
+        _spiBus.init(cs, true);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();

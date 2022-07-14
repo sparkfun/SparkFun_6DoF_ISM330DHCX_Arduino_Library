@@ -11,16 +11,17 @@
 bool QwDevISM330DHCX::init(void)
 {
     //  do we have a bus yet? is the device connected?
-    if (!_i2cAddress || !_sfeBus->ping(_i2cAddress))
+    if (!_sfeBus->ping(_i2cAddress))
         return false;
-		
-		// Setup the struct needed by the C source files for reading and writing.
+	
 		initCtx((void*)this, &sfe_dev); 			
 
 		// I2C ready, now check that we're using the correct sensor before moving on. 
+		Serial.println(getUniqueId(), HEX);
 		if (getUniqueId() != ISM330DHCX_ID)
 			return false; 
-		
+
+		Serial.println("Unique ID ok");
 
     return true;
 }
