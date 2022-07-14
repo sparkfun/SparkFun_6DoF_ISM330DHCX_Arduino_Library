@@ -16,11 +16,9 @@ void setup(){
 	digitalWrite(chipSelect, HIGH);
 
 
-	//SPISettings mySpiSettings(2000000, MSBFIRST, SPI_MODE0);
-
 	if( !myISM.begin(chipSelect) ){
 		Serial.println("Did not begin.");
-//	  while(1);
+	  while(1);
 	}
 
 	myISM.deviceReset();

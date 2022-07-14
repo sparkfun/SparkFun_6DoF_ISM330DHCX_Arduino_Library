@@ -17,11 +17,9 @@ bool QwDevISM330DHCX::init(void)
 		initCtx((void*)this, &sfe_dev); 			
 
 		// I2C ready, now check that we're using the correct sensor before moving on. 
-		Serial.println(getUniqueId(), HEX);
 		if (getUniqueId() != ISM330DHCX_ID)
 			return false; 
 
-		Serial.println("Unique ID ok");
 
     return true;
 }
