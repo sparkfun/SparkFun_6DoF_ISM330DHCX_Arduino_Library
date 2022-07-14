@@ -54,13 +54,9 @@
 #include <SPI.h>
 
 
-class SfeBus 
+class QwIDeviceBus 
 {
 	public: 
-
-		//virtual bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false) = 0;
-
-		virtual bool init(TwoWire& wirePort = Wire, bool bInit=false) = 0;
 
 		virtual bool ping(uint8_t address) = 0;
 
@@ -72,13 +68,15 @@ class SfeBus
 
 };
 
-class QwI2C : public SfeBus
+class QwI2C : public QwIDeviceBus
 {
 	public: 
 
 		QwI2C(void);
 
-		bool init(TwoWire& wirePort = Wire, bool bInit=false);
+		bool init();
+
+		bool init(TwoWire& wirePort, bool bInit=false);
 
 		bool ping(uint8_t address);
 
@@ -93,13 +91,15 @@ class QwI2C : public SfeBus
     TwoWire* _i2cPort;
 };
 
-class SfeSPI : public SfeBus
+class SfeSPI : public QwIDeviceBus
 {
 	public:
 
 		SfeSPI(void);
 
-		bool init(SPIClass& spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit=false);
+		//bool init();
+
+		bool init(SPIClass& spiPort, uint8_t cs, SPISettings ismSPISettings, bool bInit=false);
 
 		bool ping(uint8_t address);
 
@@ -112,7 +112,7 @@ class SfeSPI : public SfeBus
 	private:
 
 		SPIClass* _spiPort; 
-		SPISettings _sfeSPISettings; 
+		SPISettings _sfeSPISettings;
 		uint8_t _cs; 
 };
 

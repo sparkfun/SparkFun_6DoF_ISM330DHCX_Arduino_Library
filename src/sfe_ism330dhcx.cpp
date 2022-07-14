@@ -11,7 +11,7 @@
 bool QwDevISM330DHCX::init(void)
 {
     //  do we have a bus yet? is the device connected?
-    if (!_i2cAddress || !_sfeBus.ping(_i2cAddress))
+    if (!_i2cAddress || !_sfeBus->ping(_i2cAddress))
         return false;
 		
 		// Setup the struct needed by the C source files for reading and writing.
@@ -39,7 +39,7 @@ bool QwDevISM330DHCX::init(void)
 
 bool QwDevISM330DHCX::isConnected()
 {
-    return (_i2cAddress ? _sfeBus.ping(_i2cAddress) : false);
+    return (_i2cAddress ? _sfeBus->ping(_i2cAddress) : false);
 }
 
 
@@ -52,13 +52,13 @@ bool QwDevISM330DHCX::isConnected()
 //  ---------    -----------------------------
 //  theBus       The communication bus object
 
-void QwDevISM330DHCX::setCommunicationBus(QwI2C &theBus)
+void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
     _sfeBus = &theBus;
+		_i2cAddress = i2cAddress; 
 }
 
-
-void QwDevISM330DHCX::setCommunicationBus(SfeSPI &theBus)
+void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus)
 {
     _sfeBus = &theBus;
 }
@@ -68,12 +68,12 @@ void QwDevISM330DHCX::setCommunicationBus(SfeSPI &theBus)
 //
 int32_t QwDevISM330DHCX::writeRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
-    return _sfeBus.writeRegisterRegion(_i2cAddress, offset, data, length);
+    return _sfeBus->writeRegisterRegion(_i2cAddress, offset, data, length);
 }
 
 int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
-    return _sfeBus.readRegisterRegion(_i2cAddress, offset, data, length);
+    return _sfeBus->readRegisterRegion(_i2cAddress, offset, data, length);
 }
 
 bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)

@@ -31,11 +31,21 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
     //
     // Version 1:
     // User passes in an aready setup wirePort object
+		bool begin(uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
+		{
+        // Setup  I2C object and pass into the superclass
+        setCommunicationBus(_i2cBus, deviceAddress);
+        _i2cBus.init();
+
+        // Initialize the system - return results
+        return this->QwDevISM330DHCX::init();
+		}
+
     bool begin(TwoWire &wirePort, uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
     {
         // Setup  I2C object and pass into the superclass
-        setCommunicationBus(_i2cBus);
-        _i2cBus.init(wirePort, deviceAddress);
+        setCommunicationBus(_i2cBus, deviceAddress);
+        _i2cBus.init(wirePort, true);
 
         // Initialize the system - return results
         return this->QwDevISM330DHCX::init();

@@ -82,10 +82,15 @@ bool QwI2C::init(TwoWire &wirePort, bool bInit)
         if (bInit)
             _i2cPort->begin();
     }
-
+		
     return true;
 }
 
+
+bool QwI2C::init()
+{
+    return init(Wire);
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // ping()
 //
@@ -210,12 +215,14 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
     return 0; // Success
 }
 
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // SPI init()
 //
 // Methods to init/setup this device. The caller can provide a Wire Port, or this class
 // will use the default
-bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, bool bInit)
+bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs,  bool bInit)
 {
 
     // if we don't have a wire port already
@@ -228,10 +235,10 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs, boo
     }
 
 
-		if( ismSPISettings == NULL )
+		if( ismSPISettings =)
 			_sfeSPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
 		else
-			_sfeSPISettings = ismSPISettings;
+		_sfeSPISettings = ismSPISettings;
 
 		if( !cs )
 			return false; 
