@@ -1,7 +1,7 @@
 # SparkFun_6DoF_ISM330DHCX_Arduino_Library
 ========================================
 
-[![SparkFun Qwiic 6DoF - ISM330DHCX](URL for picture of part)](https://www.sparkfun.com/products/19764)
+[![SparkFun Qwiic 6DoF - ISM330DHCX](https://cdn.sparkfun.com/assets/parts/1/9/9/7/9/6DoFIMU_03.jpg)](https://www.sparkfun.com/products/19764)
 
 [*SparkFun Qwiic 6DoF - ISM330DHCX (19764)*](https://www.sparkfun.com/products/19764)
 
@@ -16,17 +16,12 @@ Repository Contents
 
 * **/Documentation** - Data sheets, additional product information
 * **/Examples** - Example code 
-* **/src** - Related software for the <PRODUCT NAME>
+* **/src** - Related software for the SparkFun Qwiic 6DoF ISM330DHCX breakout board
 
 Documentation
 --------------
 * **[Hookup Guide](https://learn.sparkfun.com/tutorials/qwiic-6dof---ism330dhcx-hookup-guide)** - Basic hookup guide for the SparkFun Qwiic 6DoF - ISM330DHCX.
 
-Product Versions
-----------------
-* [Part SKU](part URL)- Basic part and short description here
-* [Retail part SKU](retail URL)- Retail packaging of standard description here
-* [Any other parts this repo covers](any other URLs) - Description of said parts
 
 License Information
 -------------------
