@@ -11,16 +11,15 @@
 bool QwDevISM330DHCX::init(void)
 {
     //  do we have a bus yet? is the device connected?
-    if (!_i2cBus || !_i2cAddress || !_i2cBus->ping(_i2cAddress))
+    if (!_sfeBus->ping(_i2cAddress))
         return false;
-		
-		// Setup the struct needed by the C source files for reading and writing.
+	
 		initCtx((void*)this, &sfe_dev); 			
 
 		// I2C ready, now check that we're using the correct sensor before moving on. 
 		if (getUniqueId() != ISM330DHCX_ID)
 			return false; 
-		
+
 
     return true;
 }
@@ -39,7 +38,7 @@ bool QwDevISM330DHCX::init(void)
 
 bool QwDevISM330DHCX::isConnected()
 {
-    return (_i2cBus && _i2cAddress ? _i2cBus->ping(_i2cAddress) : false);
+    return (_i2cAddress ? _sfeBus->ping(_i2cAddress) : false);
 }
 
 
@@ -51,12 +50,16 @@ bool QwDevISM330DHCX::isConnected()
 //  Parameter    Description
 //  ---------    -----------------------------
 //  theBus       The communication bus object
-//  idBus        The id/address of the device on the bus
 
-void QwDevISM330DHCX::setCommunicationBus(QwI2C &theBus, uint8_t idBus)
+void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
-    _i2cBus = &theBus;
-    _i2cAddress = idBus;
+    _sfeBus = &theBus;
+		_i2cAddress = i2cAddress; 
+}
+
+void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus)
+{
+    _sfeBus = &theBus;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -64,12 +67,12 @@ void QwDevISM330DHCX::setCommunicationBus(QwI2C &theBus, uint8_t idBus)
 //
 int32_t QwDevISM330DHCX::writeRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
-    return _i2cBus->writeRegisterRegion(_i2cAddress, offset, data, length);
+    return _sfeBus->writeRegisterRegion(_i2cAddress, offset, data, length);
 }
 
 int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
-    return _i2cBus->readRegisterRegion(_i2cAddress, offset, data, length);
+    return _sfeBus->readRegisterRegion(_i2cAddress, offset, data, length);
 }
 
 bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)

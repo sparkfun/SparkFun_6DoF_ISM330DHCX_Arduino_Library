@@ -1,4 +1,4 @@
-// qwiic_i2c.cpp
+// sfe_bus.cpp
 //
 // This is a library written for SparkFun Qwiic ISM330DHCX boards
 //
@@ -41,7 +41,6 @@
 // Class provide an abstract interface to the I2C device
 
 
-// Header for I2C driver object
 
 #pragma once
 
@@ -52,25 +51,70 @@
 // This class is focused on Aurduino..
 
 #include <Wire.h>
+#include <SPI.h>
 
-class QwI2C {
 
-public:
-    QwI2C(void);
+class QwIDeviceBus 
+{
+	public: 
 
-    bool init(void);
-    bool init(TwoWire& wirePort, bool bInit=false);
+		virtual bool ping(uint8_t address) = 0;
 
-    // see if a device exists
-    bool ping(uint8_t address);
+		virtual	bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data) = 0;
 
-    bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data);
+		virtual int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length) = 0;
 
-    // Write a block of bytes to the device --
-    int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length);
+		virtual int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes) = 0;
 
-    int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
+};
 
-private:
+class QwI2C : public QwIDeviceBus
+{
+	public: 
+
+		QwI2C(void);
+
+		bool init();
+
+		bool init(TwoWire& wirePort, bool bInit=false);
+
+		bool ping(uint8_t address);
+
+		bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data);
+
+		int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length);
+
+		int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
+
+	private: 
+
     TwoWire* _i2cPort;
 };
+
+class SfeSPI : public QwIDeviceBus
+{
+	public:
+
+		SfeSPI(void);
+
+		//bool init();
+
+		bool init(uint8_t cs, bool bInit=false);
+
+		bool init(SPIClass& spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit=false);
+
+		bool ping(uint8_t address);
+
+		bool writeRegisterByte(uint8_t address, uint8_t offset, uint8_t data);
+
+		int writeRegisterRegion(uint8_t address, uint8_t offset, const uint8_t* data, uint16_t length);
+
+		int readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t* data, uint16_t numBytes);
+
+	private:
+
+		SPIClass* _spiPort; 
+		SPISettings _sfeSPISettings;
+		uint8_t _cs; 
+};
+

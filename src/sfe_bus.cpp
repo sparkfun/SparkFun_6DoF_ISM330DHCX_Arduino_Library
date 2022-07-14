@@ -1,4 +1,4 @@
-// qwiic_i2c.cpp
+// sfe_bus.cpp
 //
 // This is a library written for SparkFun Qwiic ISM330DHCX boards
 //
@@ -40,7 +40,7 @@
 
 // Class provide an abstract interface to the I2C device
 
-#include "qwiic_i2c.h"
+#include "sfe_bus.h"
 #include <Arduino.h>
 
 // What is the max buffer size for this platform.
@@ -55,14 +55,12 @@
 //#define kMaxTransferBuffer BUFFER_LENGTH
 
 #define kMaxTransferBuffer 32
+#define SPI_READ 0x80
 
 
 // What we use for transfer chunk size
 
 const static uint16_t kChunkSize = kMaxTransferBuffer;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructor
 
 QwI2C::QwI2C(void) : _i2cPort{nullptr}
 {
@@ -84,21 +82,15 @@ bool QwI2C::init(TwoWire &wirePort, bool bInit)
         if (bInit)
             _i2cPort->begin();
     }
-
+		
     return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//
 
-bool QwI2C::init(void)
+
+bool QwI2C::init()
 {
-    // do we already have a wire port?
-    if (!_i2cPort)
-        return init(Wire, true); // no wire, send in Wire and init it
-
-    return true;
+    return init(Wire);
 }
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // ping()
 //
@@ -221,4 +213,130 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
     } // end while
 
     return 0; // Success
+}
+
+
+
+SfeSPI::SfeSPI(void) : _spiPort{nullptr}
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// SPI init()
+//
+// Methods to init/setup this device. The caller can provide a Wire Port, or this class
+// will use the default
+bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit)
+{
+
+    // if we don't have a wire port already
+    if( !_spiPort )
+    {
+        _spiPort = &spiPort;
+
+        if( bInit )
+            _spiPort->begin();
+    }
+
+
+		_sfeSPISettings = ismSPISettings; 
+
+		if( !cs )
+			return false; 
+		
+		_cs = cs;
+
+    return true;
+}
+
+bool SfeSPI::init(uint8_t cs,  bool bInit)
+{
+
+		SPISettings spiSettings = SPISettings(1000000, MSBFIRST, SPI_MODE3); 
+		return init(SPI, spiSettings, cs, bInit);
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// ping()
+//
+// Is a device connected?
+bool SfeSPI::ping(uint8_t i2c_address)
+{
+	return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// writeRegisterByte()
+//
+// Write a byte to a register
+
+bool SfeSPI::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataToWrite)
+{
+
+    if (!_spiPort)
+        return false;
+
+    _spiPort->beginTransaction(_sfeSPISettings);
+		digitalWrite(_cs, LOW);
+    _spiPort->transfer(offset);
+    _spiPort->transfer(dataToWrite);
+		digitalWrite(_cs, HIGH);
+    _spiPort->endTransaction();
+
+		return true;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// writeRegisterRegion()
+//
+// Write a block of data to a device.
+
+int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
+{
+
+		int i;
+
+    _spiPort->beginTransaction(_sfeSPISettings);
+		digitalWrite(_cs, LOW);
+    _spiPort->transfer(offset);
+
+		for(i = 0; i < length; i++)
+		{
+			_spiPort->transfer(*data++);
+		}
+
+		digitalWrite(_cs, HIGH);
+    _spiPort->endTransaction();
+		return 0; 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// readRegisterRegion()
+//
+// Reads a block of data from the register on the device.
+//
+//
+//
+int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
+{
+    if (!_spiPort)
+        return -1;
+
+    int i;                   // counter in loop
+
+    _spiPort->beginTransaction(_sfeSPISettings);
+		digitalWrite(_cs, LOW);
+		reg = (reg | SPI_READ);
+    _spiPort->transfer(reg);
+
+		for(i = 0; i < numBytes; i++)
+		{
+			*data++ = _spiPort->transfer(0x00);
+		}
+
+		digitalWrite(_cs, HIGH);
+    _spiPort->endTransaction();
+		return 0; 
+
 }

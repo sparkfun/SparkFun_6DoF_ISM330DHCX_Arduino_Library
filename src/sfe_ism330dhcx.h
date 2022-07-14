@@ -1,4 +1,4 @@
-#include "qwiic_i2c.h"
+#include "sfe_bus.h"
 #include "sfe_ism_shim.h"
 #include "sfe_ism330dhcx_defs.h"
 
@@ -32,7 +32,7 @@ class QwDevISM330DHCX
 {
 	public: 
 
-		QwDevISM330DHCX() : _i2cBus{nullptr}, _i2cAddress{0} {};
+		QwDevISM330DHCX() : _i2cAddress{0}, _cs{0} {};
 			
 
     ///////////////////////////////////////////////////////////////////////
@@ -79,7 +79,8 @@ class QwDevISM330DHCX
     //  idBus        The bus ID for the target device.
     //
 
-    void setCommunicationBus(QwI2C &theBus, uint8_t idBus);
+		void setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddress);
+		void setCommunicationBus(QwIDeviceBus &theBus);
 
 		bool setAccelFullScale(uint8_t val);
 		bool setGyroFullScale(uint8_t val);
@@ -162,12 +163,12 @@ class QwDevISM330DHCX
 
 	private: 
 
-		QwI2C *_i2cBus; 
+		
+		QwIDeviceBus *_sfeBus; 
 		uint8_t _i2cAddress;
+		uint8_t _cs;
 		stmdev_ctx_t sfe_dev; 
 		uint8_t fullScaleAccel = 0; //Powered down by default
 		uint8_t fullScaleGyro = 0;  //Powered down by default
 };
-
-
 
