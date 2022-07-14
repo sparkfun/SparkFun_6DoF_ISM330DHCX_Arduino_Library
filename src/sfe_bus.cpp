@@ -222,7 +222,7 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
 //
 // Methods to init/setup this device. The caller can provide a Wire Port, or this class
 // will use the default
-bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs,  bool bInit)
+bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit)
 {
 
     // if we don't have a wire port already
@@ -235,10 +235,7 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs,  bo
     }
 
 
-		if( ismSPISettings =)
-			_sfeSPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
-		else
-		_sfeSPISettings = ismSPISettings;
+		_sfeSPISettings = ismSPISettings; 
 
 		if( !cs )
 			return false; 
@@ -248,6 +245,13 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings ismSPISettings, uint8_t cs,  bo
     return true;
 }
 
+bool SfeSPI::init(SPIClass &spiPort, uint8_t cs,  bool bInit)
+{
+
+		SPISettings spiSettings = SPISettings(1000000, MSBFIRST, SPI_MODE0); 
+		return init(spiPort, spiSettings, cs, bInit);
+
+}
 
 SfeSPI::SfeSPI(void) : _spiPort{nullptr}
 {
