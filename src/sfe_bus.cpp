@@ -252,7 +252,7 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  b
 bool SfeSPI::init(uint8_t cs,  bool bInit)
 {
 
-		SPISettings spiSettings = SPISettings(1000000, MSBFIRST, SPI_MODE0); 
+		SPISettings spiSettings = SPISettings(1000000, MSBFIRST, SPI_MODE3); 
 		return init(SPI, spiSettings, cs, bInit);
 
 }

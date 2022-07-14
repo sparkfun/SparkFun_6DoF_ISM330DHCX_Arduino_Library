@@ -20,7 +20,7 @@ void setup(){
 
 	if( !myISM.begin(chipSelect) ){
 		Serial.println("Did not begin.");
-	  while(1);
+//	  while(1);
 	}
 
 	myISM.deviceReset();
