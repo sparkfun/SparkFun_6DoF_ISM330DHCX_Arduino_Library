@@ -22,17 +22,24 @@ void setup(){
 		delay(1);
 	} 
 
+	Serial.println("Reset.");
+	Serial.println("Applying settings.");
+	delay(100);
 	
 	myISM.setDeviceConfig();
 	myISM.setBlockDataUpdate();
 	
-	myISM.setAccelDataRate(4);
-	myISM.setGyroDataRate(4);
-	myISM.setAccelFullScale(2); 
-	myISM.setGyroFullScale(2); 
+	myISM.setAccelDataRate(ISM_XL_ODR_104Hz);
+	myISM.setAccelFullScale(ISM_4g); 
 
-	myISM.setSlopeFilter(4);
+	myISM.setGyroFullScale(ISM_500dps); 
+	myISM.setGyroDataRate(ISM_GY_ODR_104Hz);
+
 	myISM.setAccelFilterLP2();
+	myISM.setAccelSlopeFilter(ISM_LP_ODR_DIV_100);
+
+	myISM.setGyroFilterLP1();
+	myISM.setGyroLP1Bandwidth(ISM_MEDIUM);
 
 
 }
