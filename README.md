@@ -1,4 +1,4 @@
-# SparkFun_6DoF_ISM330DHCX_Arduino_Library
+SparkFun_6DoF_ISM330DHCX_Arduino_Library
 ========================================
 
 [![SparkFun Qwiic 6DoF - ISM330DHCX](https://cdn.sparkfun.com/assets/parts/1/9/9/7/9/6DoFIMU_03.jpg)](https://www.sparkfun.com/products/19764)
