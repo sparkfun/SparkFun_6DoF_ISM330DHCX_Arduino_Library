@@ -38,35 +38,31 @@
 //    ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Class provide an abstract interface to the I2C device
+
+// The following classes specify the behavior for communicating
+// over the respective data buses: Inter-Integrated Circuit (I2C)
+// and Serial Peripheral Interface (SPI). 
 
 #include "sfe_bus.h"
 #include <Arduino.h>
 
-// What is the max buffer size for this platform.
-
-//#if defined(SERIAL_BUFFER_SIZE)
-//#define kMaxTransferBuffer SERIAL_BUFFER_SIZE
-//
-//#elif defined(I2C_BUFFER_LENGTH)
-//#define kMaxTransferBuffer I2C_BUFFER_LENGTH
-//
-//#elif defined(BUFFER_LENGTH)
-//#define kMaxTransferBuffer BUFFER_LENGTH
-
 #define kMaxTransferBuffer 32
 #define SPI_READ 0x80
 
-
 // What we use for transfer chunk size
-
 const static uint16_t kChunkSize = kMaxTransferBuffer;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Constructor
+//
+
 
 QwI2C::QwI2C(void) : _i2cPort{nullptr}
 {
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// init()
+// I2C init()
 //
 // Methods to init/setup this device. The caller can provide a Wire Port, or this class
 // will use the default
@@ -75,22 +71,30 @@ bool QwI2C::init(TwoWire &wirePort, bool bInit)
 {
 
     // if we don't have a wire port already
-    if (!_i2cPort)
+    if( !_i2cPort )
     {
         _i2cPort = &wirePort;
 
-        if (bInit)
+        if( bInit )
             _i2cPort->begin();
     }
 		
     return true;
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// I2C init()
+//
+// Methods to init/setup this device. The caller can provide a Wire Port, or this class
+// will use the default
 bool QwI2C::init()
 {
-    return init(Wire);
+		if( !_i2cPort )
+			return init(Wire);
 }
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // ping()
 //
@@ -98,7 +102,7 @@ bool QwI2C::init()
 bool QwI2C::ping(uint8_t i2c_address)
 {
 
-    if (!_i2cPort)
+    if( !_i2cPort )
         return false;
 
     _i2cPort->beginTransmission(i2c_address);
@@ -121,6 +125,9 @@ bool QwI2C::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataT
     _i2cPort->write(dataToWrite);
     return _i2cPort->endTransmission() == 0;
 }
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // writeRegisterRegion()
 //
@@ -128,25 +135,6 @@ bool QwI2C::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataT
 
 int QwI2C::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
 {
-
-    // Note:
-    //      Because of how the TMF882X I2C works, you can't chunk over data - it must be
-    //      sent in one transaction.
-    //
-    //      From an I2C standpoint, You can continue a write to the device over multiple
-    //      transactions, just omitting the register (offset) after the first write transaction.
-    //
-    //      However, the data chunks for some elements of this (namely firmware uploads) have
-    //      a checksum added to the data block being sent. This checksum is being validated
-    //      by the device after each write transaction. If you chunk this across multi
-    //      I2C transactions, it appears the checksum validation on the device fails, and
-    //      the sensor/device won't enter "app mode" because upload failed.
-    //
-    //      To work around this, we reduce the chunk size for firmware upload in the file
-    //      "inc/tmf882x_mode_bl.h" - the #define BL_NUM_DATA is adjusted based on the platform
-    //      being used (what is it's I2C buffer size).
-
-    // Just do a simple write transaction.
 
     _i2cPort->beginTransmission(i2c_address);
     _i2cPort->write(offset);
@@ -171,11 +159,6 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
     if (!_i2cPort)
         return -1;
 
-    // Note, this device handles *chunking* differently than others. Each chunk
-    // is a transaction (stop conndition sent), but after the first read,
-    // the next chunk is a standard I2C transaction, but you don't send the register
-    // address
-
     int i;                   // counter in loop
     bool bFirstInter = true; // Flag for first iteration - used to send register
 
@@ -195,7 +178,6 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
         // We're chunking in data - keeping the max chunk to kMaxI2CBufferLength
         nChunk = numBytes > kChunkSize ? kChunkSize : numBytes;
 
-        // For this device, we always send the stop condition - or it won't chunk data.
         nReturned = _i2cPort->requestFrom((int)addr, (int)nChunk, (int)true);
 
         // No data returned, no dice
@@ -217,6 +199,10 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// Constructor
+//
+
 SfeSPI::SfeSPI(void) : _spiPort{nullptr}
 {
 }
@@ -224,12 +210,14 @@ SfeSPI::SfeSPI(void) : _spiPort{nullptr}
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // SPI init()
 //
-// Methods to init/setup this device. The caller can provide a Wire Port, or this class
+// Methods to init/setup this device. The caller can provide a SPI Port, or this class
 // will use the default
+
+
 bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit)
 {
 
-    // if we don't have a wire port already
+    // if we don't have a SPI port already
     if( !_spiPort )
     {
         _spiPort = &spiPort;
@@ -239,8 +227,11 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  b
     }
 
 
+		// SPI settings are needed for every transaction
 		_sfeSPISettings = ismSPISettings; 
 
+		// The chip select pin can vary from platform to platform and project to project
+		// and so it must be given by the user. 
 		if( !cs )
 			return false; 
 		
@@ -249,10 +240,18 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  b
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+// SPI init()
+//
+// Methods to init/setup this device. The caller can provide a SPI Port, or this class
+// will use the default
 bool SfeSPI::init(uint8_t cs,  bool bInit)
 {
 
+		//If the transaction settings are not provided by the user they are built here.
 		SPISettings spiSettings = SPISettings(1000000, MSBFIRST, SPI_MODE3); 
+
+		//In addition of the port is not provided by the user, it defaults to SPI here. 
 		return init(SPI, spiSettings, cs, bInit);
 
 }
@@ -261,7 +260,11 @@ bool SfeSPI::init(uint8_t cs,  bool bInit)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // ping()
 //
-// Is a device connected?
+// Is a device connected? The SPI ping is not relevant but is defined here to keep consistency with
+// I2C class i.e. provided for the interface.
+//
+
+
 bool SfeSPI::ping(uint8_t i2c_address)
 {
 	return true;
@@ -275,18 +278,25 @@ bool SfeSPI::ping(uint8_t i2c_address)
 bool SfeSPI::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataToWrite)
 {
 
-    if (!_spiPort)
+    if( !_spiPort )
         return false;
 
+		// Apply settings
     _spiPort->beginTransaction(_sfeSPISettings);
+		// Signal communication start
 		digitalWrite(_cs, LOW);
+
     _spiPort->transfer(offset);
     _spiPort->transfer(dataToWrite);
+
+		// End communcation
 		digitalWrite(_cs, HIGH);
     _spiPort->endTransaction();
 
 		return true;
 }
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // writeRegisterRegion()
 //
@@ -297,7 +307,9 @@ int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8
 
 		int i;
 
+		// Apply settings
     _spiPort->beginTransaction(_sfeSPISettings);
+		// Signal communication start
 		digitalWrite(_cs, LOW);
     _spiPort->transfer(offset);
 
@@ -306,6 +318,7 @@ int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8
 			_spiPort->transfer(*data++);
 		}
 
+		// End communication
 		digitalWrite(_cs, HIGH);
     _spiPort->endTransaction();
 		return 0; 
@@ -318,15 +331,20 @@ int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8
 //
 //
 //
+
+
 int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
 {
     if (!_spiPort)
         return -1;
 
-    int i;                   // counter in loop
+    int i; // counter in loop
 
+		// Apply settings
     _spiPort->beginTransaction(_sfeSPISettings);
+		// Signal communication start
 		digitalWrite(_cs, LOW);
+		// A leading zero must be added to transfer with register to indicate a "read"
 		reg = (reg | SPI_READ);
     _spiPort->transfer(reg);
 
@@ -335,6 +353,7 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
 			*data++ = _spiPort->transfer(0x00);
 		}
 
+		// End transaction
 		digitalWrite(_cs, HIGH);
     _spiPort->endTransaction();
 		return 0; 
