@@ -38,7 +38,8 @@ bool QwDevISM330DHCX::init(void)
 
 bool QwDevISM330DHCX::isConnected()
 {
-    return (_i2cAddress ? _sfeBus->ping(_i2cAddress) : false);
+		if (getUniqueId() != ISM330DHCX_ID)
+			return false; 
 }
 
 
