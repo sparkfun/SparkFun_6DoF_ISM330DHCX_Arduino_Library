@@ -5,7 +5,7 @@ SparkFun_ISM330DHCX_SPI myISM;
 sfe_ism_data_t accelData; 
 sfe_ism_data_t gyroData; 
 
-byte chipSelect = 41;
+byte chipSelect = 1;
 
 void setup(){
 
