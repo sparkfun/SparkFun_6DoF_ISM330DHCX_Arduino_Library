@@ -775,9 +775,22 @@ bool QwDevISM330DHCX::resetTimestamp()
 //  
 // 
 
+//////////////////////////////////////////////////////////////////////////////////
+// setFifoWatermark()
+// 
+// Sets the FIFO's watermark 
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val					Sets the watermark, must be some value less than 511 (9 bit value)
+//
+
 bool QwDevISM330DHCX::setFifoWatermark(uint16_t val)
 {
 	int32_t retVal;
+
+	if( val > 511 ) 
+		return false; 
 
 	retVal = ism330dhcx_fifo_watermark_set(&sfe_dev, val);
 
@@ -786,6 +799,19 @@ bool QwDevISM330DHCX::setFifoWatermark(uint16_t val)
 
 	return true;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setFifoMode()
+// 
+// Sets the FIFO's mode: 
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val					Selects the FIFO's mode
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+//
 
 bool QwDevISM330DHCX::setFifoMode(uint8_t val)
 {
@@ -802,6 +828,19 @@ bool QwDevISM330DHCX::setFifoMode(uint8_t val)
 
 	return true;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setFifoMode()
+// 
+// Sets the FIFO's mode: 
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val					Selects the FIFO's mode
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+//
 
 bool QwDevISM330DHCX::setAccelFifoBatchSet(uint8_t val)
 {

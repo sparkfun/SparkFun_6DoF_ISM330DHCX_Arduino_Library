@@ -80,3 +80,11 @@
 #define ISM_LP_ODR_DIV_200          0x05
 #define ISM_LP_ODR_DIV_400          0x06
 #define ISM_LP_ODR_DIV_800          0x07
+
+//FIFO Mode Settings
+#define ISM_BYPASS_MODE           0x00
+#define ISM_FIFO_MODE             0x01
+#define ISM_STREAM_TO_FIFO_MODE   0x03
+#define ISM_BYPASS_TO_STREAM_MODE 0x04
+#define ISM_STREAM_MODE           0x06
+#define ISM_BYPASS_TO_FIFO_MODE   0x07
