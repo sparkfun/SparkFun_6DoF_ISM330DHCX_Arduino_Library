@@ -54,6 +54,7 @@ bool QwDevISM330DHCX::isConnected()
 //  Parameter    Description
 //  ---------    -----------------------------
 //  theBus       The communication bus object
+//  i2cAddress   I2C address for the 6DoF
 
 void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
@@ -61,23 +62,64 @@ void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddre
 		_i2cAddress = i2cAddress; 
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+// setCommunicationBus()
+//
+// Overloaded option for setting the data bus (theBus) object to a SPI bus object.
+//
+//  Parameter    Description
+//  ---------    -----------------------------
+//  theBus       The communication bus object
+//  
+
 void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus)
 {
     _sfeBus = &theBus;
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// writeRegisterRegion()
 //
+// Writes data to the given register
 //
+//  Parameter    Description
+//  ---------    -----------------------------
+//  offset       The register to be written to
+//  data         Data to be written
+//  length       Number of bytes to be written
+
 int32_t QwDevISM330DHCX::writeRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
     return _sfeBus->writeRegisterRegion(_i2cAddress, offset, data, length);
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// readRegisterRegion()
+//
+// Reads data from the given register, auto-incrementing fore each successive read
+//
+//  Parameter    Description
+//  ---------    -----------------------------
+//  offset       The register to be read from
+//  data         Pointer to where data will be saved
+//  length       Number of bytes to be read
+
 int32_t QwDevISM330DHCX::readRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
     return _sfeBus->readRegisterRegion(_i2cAddress, offset, data, length);
 }
+
+//////////////////////////////////////////////////////////////////////////////
+// setAccelFullScale()
+//
+// Sets the scale of the acceleromter's readings 2g - 16g
+//
+//  Parameter    Description
+//  ---------    -----------------------------
+//  val          The scale to be applied to the accelerometer (0 - 3)
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+//
 
 bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)
 {
@@ -96,6 +138,18 @@ bool QwDevISM330DHCX::setAccelFullScale(uint8_t val)
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+// setGyroFullScale()
+//
+// Sets the scale of the gyroscopes's readings 125, 250, 500, 1000, 2000, 4000 degrees per second
+//
+//  Parameter    Description
+//  ---------    -----------------------------
+//  val          The scale to be applied to the gyroscope (0,1,2,4,6,12)
+//   
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+//
 bool QwDevISM330DHCX::setGyroFullScale(uint8_t val)
 {
 	//0,1,2,4,8,12
@@ -113,6 +167,12 @@ bool QwDevISM330DHCX::setGyroFullScale(uint8_t val)
 	return true; 
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// getAccelFullScale()
+//
+// Retrieves the scale of the accelerometer's readings 
+//
+
 uint8_t QwDevISM330DHCX::getAccelFullScale()
 {
 
@@ -124,6 +184,12 @@ uint8_t QwDevISM330DHCX::getAccelFullScale()
 	
 	return (uint8_t)val; 
 }
+
+//////////////////////////////////////////////////////////////////////////////
+// getUniqueId()
+//
+// Retrieves the the device's ID: 0x6B for the ISM330DHCX
+//
 
 uint8_t QwDevISM330DHCX::getUniqueId()
 {
@@ -138,6 +204,12 @@ uint8_t QwDevISM330DHCX::getUniqueId()
 }
 
 
+//////////////////////////////////////////////////////////////////////////////
+// getTemp()
+//
+// Gets the temperature
+//
+
 int16_t QwDevISM330DHCX::getTemp()
 {
 	
@@ -151,9 +223,18 @@ int16_t QwDevISM330DHCX::getTemp()
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+// getRawAccel()
+//
+// Retrieves raw register values for accelerometer data 
+//
+//  Parameter    Description
+//  ---------    -----------------------------
+//  accelData    Accel data type pointer at which data will be stored. 
+
 bool QwDevISM330DHCX::getRawAccel(sfe_ism_raw_data_t* accelData)
 {
-	
 	int16_t tempVal[3] = {0};	
 	int32_t retVal = ism330dhcx_acceleration_raw_get(&sfe_dev, tempVal);
 
@@ -167,6 +248,17 @@ bool QwDevISM330DHCX::getRawAccel(sfe_ism_raw_data_t* accelData)
 	return true;
 
 }
+
+
+//////////////////////////////////////////////////////////////////////////////
+// getRawGyro()
+//
+// Retrieves raw register values for gyroscope data 
+//
+//  Parameter    Description
+//  ---------   -----------------------------
+//  gyroData    Gyro data type pointer at which data will be stored. 
+//
 
 bool QwDevISM330DHCX::getRawGyro(sfe_ism_raw_data_t* gyroData)
 {
@@ -186,6 +278,17 @@ bool QwDevISM330DHCX::getRawGyro(sfe_ism_raw_data_t* gyroData)
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+// getAccel()
+//
+// Retrieves raw register values and converts them according to the full scale settings
+//
+//  Parameter    Description
+//  ---------   -----------------------------
+//  accelData    Accel data type pointer at which data will be stored. 
+//
+
 bool QwDevISM330DHCX::getAccel(sfe_ism_data_t* accelData)
 {
 	
@@ -195,7 +298,7 @@ bool QwDevISM330DHCX::getAccel(sfe_ism_data_t* accelData)
 	if( retVal != 0 )
 		return false;
 	
-	// Private variable that keeps track of the users settings
+	// "fullScaleAccel" is a private variable that keeps track of the users settings
 	// so that the register values can be converted accordingly
 	switch( fullScaleAccel ){
 		case 0:
@@ -225,6 +328,16 @@ bool QwDevISM330DHCX::getAccel(sfe_ism_data_t* accelData)
 	return true;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// getGyro()
+//
+// Retrieves raw register values and converts them according to the full scale settings
+//
+//  Parameter    Description
+//  ---------   -----------------------------
+//  gyroData    Gyroscope data type pointer at which data will be stored. 
+//
+
 
 bool QwDevISM330DHCX::getGyro(sfe_ism_data_t* gyroData)
 {
@@ -235,7 +348,7 @@ bool QwDevISM330DHCX::getGyro(sfe_ism_data_t* gyroData)
 	if( retVal != 0 )
 		return false;
 
-	// Private variable that keeps track of the users settings
+	// "fullScaleGyro" is a private variable that keeps track of the users settings
 	// so that the register values can be converted accordingly
 	switch( fullScaleGyro ){
 		case 0:
@@ -278,13 +391,7 @@ bool QwDevISM330DHCX::getGyro(sfe_ism_data_t* gyroData)
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// Conversions
-//
-// 
-//
-//
-//  
-// 
+// Conversions Methods
 // 
 //
 
@@ -355,10 +462,16 @@ float QwDevISM330DHCX::convertToCelsius(int16_t data)
 // 
 //
 //
-//  
-// 
-// 
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setDeviceConfig()
 //
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable      Enable the general device configuration - this is a configuration 
+//							register in the ISM330DHCX, not a library implementation. 
 
 bool QwDevISM330DHCX::setDeviceConfig(bool enable)
 {
@@ -372,6 +485,13 @@ bool QwDevISM330DHCX::setDeviceConfig(bool enable)
 	return true;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// deviceReset()
+// 
+// Resets the deivice to default settings
+// 
+
 bool QwDevISM330DHCX::deviceReset()
 {
 	int32_t retVal;
@@ -383,6 +503,12 @@ bool QwDevISM330DHCX::deviceReset()
 
 	return true;
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// getDeviceReset()
+// 
+// Checks to see that the reset bit has been set
+// 
 
 bool QwDevISM330DHCX::getDeviceReset()
 {
@@ -402,6 +528,18 @@ bool QwDevISM330DHCX::getDeviceReset()
 	
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setAccelSlopeFilter()
+// 
+// Sets the accelerometer's slope filter
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val         This parameter determines the intensity of the filter - (0-7) 
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+
 bool QwDevISM330DHCX::setAccelSlopeFilter(uint8_t val)
 {
 	int32_t retVal;
@@ -417,6 +555,18 @@ bool QwDevISM330DHCX::setAccelSlopeFilter(uint8_t val)
 	return true;
 }
 
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setAccelFilterLP2()
+// 
+// Enables the accelerometer's high resolution slope filter
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable      Enables/Disables the high resolution slope filter
+//
+
 bool QwDevISM330DHCX::setAccelFilterLP2(bool enable)
 {
 	int32_t retVal;
@@ -429,6 +579,17 @@ bool QwDevISM330DHCX::setAccelFilterLP2(bool enable)
 	return true;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setGyroFilterLP1()
+// 
+// Enables the gyroscope's slope filter
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable      Enables/Disables the high resolution slope filter
+//
+
 bool QwDevISM330DHCX::setGyroFilterLP1(bool enable)
 {
 	int32_t retVal;
@@ -440,6 +601,18 @@ bool QwDevISM330DHCX::setGyroFilterLP1(bool enable)
 
 	return true;
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// setGyroLP1Bandwidth()
+// 
+// Sets the low pass filter's bandwidth for the gyroscope
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val					Sets the bandwidth's value
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+//
 
 bool QwDevISM330DHCX::setGyroLP1Bandwidth(uint8_t val)
 {
@@ -456,16 +629,35 @@ bool QwDevISM330DHCX::setGyroLP1Bandwidth(uint8_t val)
 	return true;
 }
 
-bool QwDevISM330DHCX::setBlockDataUpdate(bool set)
+
+//////////////////////////////////////////////////////////////////////////////////
+// setBlockDataUpdate()
+// 
+// Data is not updated until both MSB and LSB have been read from output registers
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable			Enable/disables block data update.
+//
+
+bool QwDevISM330DHCX::setBlockDataUpdate(bool enable)
 {
 
-	int32_t retVal = ism330dhcx_block_data_update_set(&sfe_dev, (uint8_t)set);
+	int32_t retVal = ism330dhcx_block_data_update_set(&sfe_dev, (uint8_t)enable);
 
 	if( retVal != 0 )
 		return false;
 
 	return true; 
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// getBlockDataUpdate()
+// 
+// Retrieves the bit indicating whether block data update is enabled. 
+// 
+//
 
 uint8_t QwDevISM330DHCX::getBlockDataUpdate()
 {
@@ -475,6 +667,18 @@ uint8_t QwDevISM330DHCX::getBlockDataUpdate()
 
 	return tempVal; 
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setAccelDataRate()
+// 
+// This sets the data output rate for the accelerometer.
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  rate        Sets the output data rate, expects some value < 11. 
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
 
 bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 {
@@ -488,6 +692,19 @@ bool QwDevISM330DHCX::setAccelDataRate(uint8_t rate)
 
 	return true; 
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setGyroDataRate()
+// 
+// This sets the data output rate for the gyroscope.
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  rate        Sets the output data rate, expects some value < 10. 
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+//
 
 bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
 {
@@ -504,6 +721,16 @@ bool QwDevISM330DHCX::setGyroDataRate(uint8_t rate)
 
 
 
+//////////////////////////////////////////////////////////////////////////////////
+// enableTimestamp()
+// 
+// Enables time stamp counter
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable      Enables/disables time stamp counter
+//
+
 bool QwDevISM330DHCX::enableTimestamp(bool enable)
 {
 	int32_t retVal;
@@ -515,6 +742,14 @@ bool QwDevISM330DHCX::enableTimestamp(bool enable)
 
 	return true;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// resetTimestamp()
+// 
+// Resets time stamp counter
+// 
+//
 
 bool QwDevISM330DHCX::resetTimestamp()
 {
