@@ -88,3 +88,48 @@
 #define ISM_BYPASS_TO_STREAM_MODE 0x04
 #define ISM_STREAM_MODE           0x06
 #define ISM_BYPASS_TO_FIFO_MODE   0x07
+
+//FIFO Accelerometer Batch Settings
+#define ISM_XL_NOT_BATCHED       0x00
+#define ISM_XL_BATCH_AT_12Hz5    0x01
+#define ISM_XL_BATCH_AT_26Hz     0x02
+#define ISM_XL_BATCH_AT_52Hz     0x03
+#define ISM_XL_BATCH_AT_104Hz    0x04
+#define ISM_XL_BATCH_AT_208Hz    0x05
+#define ISM_XL_BATCH_AT_417Hz    0x06
+#define ISM_XL_BATCH_AT_833Hz    0x07
+#define ISM_XL_BATCH_AT_1667Hz   0x08
+#define ISM_XL_BATCH_AT_3333Hz   0x09
+#define ISM_XL_BATCH_AT_6667Hz   0x010
+#define ISM_XL_BATCH_6Hz5        0x011
+
+//FIFO Gyroscope Batch Settings
+#define ISM_GY_NOT_BATCHED      0x00
+#define ISM_GY_BATCH_AT_12Hz5    0x01
+#define ISM_GY_BATCH_AT_26Hz     0x02
+#define ISM_GY_BATCH_AT_52Hz     0x03
+#define ISM_GY_BATCH_AT_104Hz    0x04
+#define ISM_GY_BATCH_AT_208Hz    0x05
+#define ISM_GY_BATCH_AT_417Hz    0x06
+#define ISM_GY_BATCH_AT_833Hz    0x07
+#define ISM_GY_BATCH_AT_1667Hz   0x08
+#define ISM_GY_BATCH_AT_3333Hz   0x09
+#define ISM_GY_BATCH_AT_6667Hz   0x010
+#define ISM_GY_BATCH_6Hz5        0x011
+
+//Decimation rate
+#define ISM_NO_DECIMATION 0x00
+#define ISM_DEC_1         0x01
+#define ISM_DEC_8         0x02
+#define ISM_DEC_32        0x03
+
+//Interrupt pin notification settings.
+#define ISM_ALL_INT_PULSED            0x00
+#define ISM_BASE_LATCHED_EMB_PULSED   0x01
+#define ISM_BASE_PULSED_EMB_LATCHED   0x02
+#define ISM_ALL_INT_LATCHED           0x03
+
+#define ISM_SH_ODR_104Hz 0x00
+#define ISM_SH_ODR_52Hz  0x01
+#define ISM_SH_ODR_26Hz  0x02
+#define ISM_SH_ODR_13Hz  0x03

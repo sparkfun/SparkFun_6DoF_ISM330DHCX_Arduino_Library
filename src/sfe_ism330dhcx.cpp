@@ -804,7 +804,7 @@ bool QwDevISM330DHCX::setFifoWatermark(uint16_t val)
 //////////////////////////////////////////////////////////////////////////////////
 // setFifoMode()
 // 
-// Sets the FIFO's mode: 
+// Sets the FIFO's mode. 
 // 
 //  Parameter   Description
 //  ---------   -----------------------------
@@ -831,13 +831,13 @@ bool QwDevISM330DHCX::setFifoMode(uint8_t val)
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// setFifoMode()
+// setAccelFifoBatchSet()
 // 
-// Sets the FIFO's mode: 
+// Sets the batch data rate for the accelerometer
 // 
 //  Parameter   Description
 //  ---------   -----------------------------
-//  val					Selects the FIFO's mode
+//  val					Sets the batch data rate. 
 //
 // See sfe_ism330dhcx_defs.h for a list of valid arguments
 //
@@ -858,6 +858,18 @@ bool QwDevISM330DHCX::setAccelFifoBatchSet(uint8_t val)
 }
 
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setGyroFifoBatchSet()
+// 
+// Sets the batch data rate for the gyroscope
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val					Sets the batch data rate. 
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+
 bool QwDevISM330DHCX::setGyroFifoBatchSet(uint8_t val)
 {
 	int32_t retVal;
@@ -872,6 +884,17 @@ bool QwDevISM330DHCX::setGyroFifoBatchSet(uint8_t val)
 
 	return true;
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// setFifoTimestampDec()
+// 
+// Sets the FIFO time stamp decimation rate.
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val					Sets the time stamp decimation rate, 
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
 
 bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
 {
@@ -901,6 +924,15 @@ bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
 //  
 // 
 
+//////////////////////////////////////////////////////////////////////////////////
+// setPinMode
+//
+// Sets the active state of the interrupt pin - high or low.  
+//
+//  Parameter   Description
+//  ---------   -----------------------------
+//  openDrain   Set true for active low and false for active high
+//
 
 bool QwDevISM330DHCX::setPinMode(bool openDrain )
 {
@@ -914,6 +946,18 @@ bool QwDevISM330DHCX::setPinMode(bool openDrain )
 
 	return true; 
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setIntNotification
+//
+// Sets what the triggers an interrupt
+//
+//  Parameter   Description
+//  ---------   -----------------------------
+//  val         Sets which event triggers an interrupt.   
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
 
 bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 {
@@ -929,6 +973,13 @@ bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 
 	return true;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// setAccelStatustoInt1
+//
+// Sends the accelerometer's data ready signal to interrupt one.
+//
 
 bool QwDevISM330DHCX::setAccelStatustoInt1()
 {
@@ -946,6 +997,13 @@ bool QwDevISM330DHCX::setAccelStatustoInt1()
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setAccelStatustoInt2
+//
+// Sends the accelerometer's data ready signal to interrupt two.
+//
+
 bool QwDevISM330DHCX::setAccelStatustoInt2()
 {
 
@@ -962,6 +1020,12 @@ bool QwDevISM330DHCX::setAccelStatustoInt2()
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setGyroStatustoInt1
+//
+// Sends the gyroscopes's data ready signal to interrupt one.
+//
 bool QwDevISM330DHCX::setGyroStatustoInt1()
 {
 
@@ -978,6 +1042,12 @@ bool QwDevISM330DHCX::setGyroStatustoInt1()
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setGyroStatustoInt2
+//
+// Sends the gyroscopes's data ready signal to interrupt two.
+//
 bool QwDevISM330DHCX::setGyroStatustoInt2()
 {
 
@@ -994,6 +1064,12 @@ bool QwDevISM330DHCX::setGyroStatustoInt2()
 	return true; 
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// setDataReadyMode
+//
+// Sets how the data ready signal is latched i.e. only return zero after interface reading
+// OR is pulsed. 
+//
 bool QwDevISM330DHCX::setDataReadyMode(uint8_t val)
 {
 	int32_t retVal;
@@ -1024,6 +1100,18 @@ bool QwDevISM330DHCX::setDataReadyMode(uint8_t val)
 // 
 // 
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubODR
+//
+// Sets the output data rate for the Sensor Hub.
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  rate				Selects the rate
+//
+// See sfe_ism330dhcx_defs.h for a list of valid arguments
+
 bool QwDevISM330DHCX::setHubODR(uint8_t rate)
 {
 	//0 = 104Hz, 1 = 52Hz, 2 = 26Hz, 3 = 13Hz
@@ -1038,6 +1126,20 @@ bool QwDevISM330DHCX::setHubODR(uint8_t rate)
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubSensor
+//
+// Sets the general sensor hub settings, which sensor and their I2C address and register 
+// to read.
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  sensor      Selects the external sensor (1-4)
+//  settings		The I2C address, register address, and number of reads for the external sensor
+//							that is connected in sensor hub mode.
+//
+//
 bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings)
 {
 	int32_t retVal;
@@ -1075,6 +1177,16 @@ bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* se
 	return true; 
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// setNumberHubSensors
+//
+// Sets the number of external sensor connected to the ISM
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  numSensor   The number of sensors 0 - 3 = 4
+//
+
 bool QwDevISM330DHCX::setNumberHubSensors(uint8_t numSensors)
 {
 
@@ -1092,6 +1204,13 @@ bool QwDevISM330DHCX::setNumberHubSensors(uint8_t numSensors)
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// enableSensorI2C
+//
+// Enables the 6DoF as an I2C sensor controller
+// 
+
 bool QwDevISM330DHCX::enableSensorI2C(bool enable)
 {
 	int32_t retVal;
@@ -1103,6 +1222,17 @@ bool QwDevISM330DHCX::enableSensorI2C(bool enable)
 
 	return true;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// readPeripheralSensor
+//
+// Read external sensor hub data.  
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  shReg       Pointer to store the data to be read. 
+//  len					Number of reads to be executed.
 
 bool QwDevISM330DHCX::readPeripheralSensor(uint8_t* shReg, uint8_t len)
 {
@@ -1128,6 +1258,17 @@ bool QwDevISM330DHCX::readMMCMagnetometer(uint8_t* magData, uint8_t len)
 	return true;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubWriteMode
+//
+// Sets how often the 6DoF should write to the external sensor: once per cycle i.e. output 
+// data rate, or just once. 
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  config       How often to be written
+
 bool QwDevISM330DHCX::setHubWriteMode(uint8_t config)
 {
 	int32_t retVal;
@@ -1146,17 +1287,37 @@ bool QwDevISM330DHCX::setHubWriteMode(uint8_t config)
 	return true;
 }
 
-bool QwDevISM330DHCX::setHubPassThrough(bool set)
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubPassThrough
+//
+//	Allows the primary I2C data lines to communicate through the auxiliary I2C lines.
+//	
+//  Parameter   Description
+//  ---------   -----------------------------
+//  set					Enables/disables pass through
+//
+
+bool QwDevISM330DHCX::setHubPassThrough(bool enable)
 {
 
 	int32_t retVal;
-	ism330dhcx_sh_pass_through_set(&sfe_dev, (uint8_t)set);
+	ism330dhcx_sh_pass_through_set(&sfe_dev, (uint8_t)enable);
 
 	if( retVal != 0 );
 		return false;
 
 	return true; 
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubFifoBatching
+//
+// Sets sensor hub FIFO batching
+//	
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable			Enable/disables fifo batching
 
 bool QwDevISM330DHCX::setHubFifoBatching(bool enable)
 {
