@@ -1379,6 +1379,13 @@ bool QwDevISM330DHCX::setGyroSelfTest(uint8_t val)
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////
+// checkStatus
+//
+// Checks if data is ready for both the acclerometer and the gyroscope
+//
+
 bool QwDevISM330DHCX::checkStatus()
 {
 	ism330dhcx_status_reg_t tempVal;
@@ -1393,6 +1400,12 @@ bool QwDevISM330DHCX::checkStatus()
 	return false; 
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// checkAccelStatus
+//
+// Checks if data is ready for the acclerometer 
+
 bool QwDevISM330DHCX::checkAccelStatus()
 {
 	ism330dhcx_status_reg_t tempVal;
@@ -1408,6 +1421,11 @@ bool QwDevISM330DHCX::checkAccelStatus()
 
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// checkAccelStatus
+//
+// Checks if data is ready for the gyroscope 
+
 bool QwDevISM330DHCX::checkGyroStatus()
 {
 	ism330dhcx_status_reg_t tempVal;
@@ -1422,6 +1440,11 @@ bool QwDevISM330DHCX::checkGyroStatus()
 	return false; 
 
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// checkAccelStatus
+//
+// Checks if data is ready for the temperature sensor 
 
 bool QwDevISM330DHCX::checkTempStatus()
 {
