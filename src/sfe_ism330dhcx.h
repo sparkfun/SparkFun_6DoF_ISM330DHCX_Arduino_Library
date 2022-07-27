@@ -28,6 +28,7 @@ struct sfe_hub_sensor_settings_t
 	uint8_t length;
 };
 
+
 class QwDevISM330DHCX
 {
 	public: 
@@ -128,7 +129,8 @@ class QwDevISM330DHCX
 			
 		// Sensor Hub Settings
 		bool setHubODR(uint8_t rate);
-		bool setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
+		bool setHubSensorRead(uint8_t sensor, sfe_hub_sensor_settings_t* settings);
+		bool setHubSensorWrite(sfe_hub_sensor_settings_t* settings);
 		bool setNumberHubSensors(uint8_t numSensors);
 		bool enableSensorI2C(bool enable);
 		bool readPeripheralSensor(uint8_t* shReg, uint8_t len);
@@ -136,6 +138,7 @@ class QwDevISM330DHCX
 		bool readMMCMagnetometer(uint8_t* magData, uint8_t len);
 		bool setHubPassThrough(bool enable = true);
 		bool setHubFifoBatching(bool enable = true);
+		bool setHubPullUps(bool enable = true);
 
 		// Self Test
 		bool setAccelSelfTest(uint8_t val);

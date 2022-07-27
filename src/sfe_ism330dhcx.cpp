@@ -1128,7 +1128,7 @@ bool QwDevISM330DHCX::setHubODR(uint8_t rate)
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// setHubSensor
+// setHubSensorRead
 //
 // Sets the general sensor hub settings, which sensor and their I2C address and register 
 // to read.
@@ -1140,7 +1140,7 @@ bool QwDevISM330DHCX::setHubODR(uint8_t rate)
 //							that is connected in sensor hub mode.
 //
 //
-bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* settings)
+bool QwDevISM330DHCX::setHubSensorRead(uint8_t sensor, sfe_hub_sensor_settings_t* settings)
 {
 	int32_t retVal;
 	ism330dhcx_sh_cfg_read_t tempSett;
@@ -1170,6 +1170,23 @@ bool QwDevISM330DHCX::setHubSensor(uint8_t sensor, sfe_hub_sensor_settings_t* se
 			return false;
 	}
 
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+bool QwDevISM330DHCX::setHubSensorWrite(sfe_hub_sensor_settings_t* settings)
+{
+	int32_t retVal;
+	ism330dhcx_sh_cfg_write_t tempSett;
+
+	tempSett.slv0_add = settings->address; 
+	tempSett.slv0_subadd = settings->subAddress; 
+	tempSett.slv0_data = settings->length; 
+
+	retVal = ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
 
 	if( retVal != 0 )
 		return false;
@@ -1330,6 +1347,19 @@ bool QwDevISM330DHCX::setHubFifoBatching(bool enable)
 
 	return true;
 }
+
+bool QwDevISM330DHCX::setHubPullUps(bool enable)
+{
+
+	int32_t retVal;
+
+	retVal = ism330dhcx_sh_pin_mode_set(&sfe_dev, (ism330dhcx_shub_pu_en_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
 //
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -1460,3 +1490,4 @@ bool QwDevISM330DHCX::checkTempStatus()
 	return false; 
 
 }
+
