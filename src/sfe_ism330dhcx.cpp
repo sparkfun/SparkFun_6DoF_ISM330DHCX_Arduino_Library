@@ -17,7 +17,6 @@ bool QwDevISM330DHCX::init(void)
 		initCtx((void*)this, &sfe_dev); 			
 
 		// I2C ready, now check that we're using the correct sensor before moving on. 
-		Serial.println(getUniqueId(), HEX);
 		if (getUniqueId() != ISM330DHCX_ID)
 			return false; 
 
@@ -1152,6 +1151,7 @@ bool QwDevISM330DHCX::setHubSensorRead(uint8_t sensor, sfe_hub_sensor_settings_t
 	tempSett.slv_subadd = settings->subAddress; 
 	tempSett.slv_len = settings->length; 
 
+
 	switch( sensor )
 	{
 		case 0:
@@ -1407,6 +1407,20 @@ bool QwDevISM330DHCX::setHubPullUps(bool enable)
 	int32_t retVal;
 
 	retVal = ism330dhcx_sh_pin_mode_set(&sfe_dev, (ism330dhcx_shub_pu_en_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true; 
+}
+
+
+bool QwDevISM330DHCX::resetSensorHub()
+{
+
+	int32_t retVal;  
+
+	retVal = ism330dhcx_sh_reset_set(&sfe_dev);
 
 	if( retVal != 0 )
 		return false;

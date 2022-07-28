@@ -141,6 +141,7 @@ class QwDevISM330DHCX
 		bool setHubPullUps(bool enable = true);
 		bool getHubStatus();
 		bool externalSensorNack(uint8_t sensor);
+		bool resetSensorHub();
 
 		// Self Test
 		bool setAccelSelfTest(uint8_t val);
