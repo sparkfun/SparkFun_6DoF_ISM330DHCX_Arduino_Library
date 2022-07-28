@@ -20,11 +20,11 @@ uint32_t magZVal;
 
 void setup(){
 
-	readsh.address = MAG_ADDR; 
+	readsh.address = 0x30; 
 	readsh.subAddress = MAG_READ_REG; 
 	readsh.length = MAG_READ_LEN; 
 
-	writesh.address = MAG_ADDR; 
+	writesh.address = 0x30; 
 	writesh.subAddress = MAG_WRITE_REG; 
 	writesh.length = MAG_WRITE_LEN; 
 
@@ -105,10 +105,16 @@ void loop(){
 
 		myISM.getAccel(&accelData);
 		myISM.getGyro(&gyroData);
-		myISM.readPeripheralSensor(shRawData, (uint8_t)MAG_READ_LEN);
 
-		Serial.print("Test: ");
-		Serial.println(shRawData[0]);
+		if( myISM.externalSensorNack(0) ){
+			Serial.println("MMC Nacked...");
+		}
+
+		if( myISM.getHubStatus() ){
+			Serial.println("Hub Comms Done.");
+			myISM.readPeripheralSensor(shRawData, (uint8_t)MAG_READ_LEN);
+		}
+
 
 		magXVal = shRawData[0] | shRawData [1] | (shRawData[6] & 0x20); 
 		magYVal = shRawData[2] | shRawData [3] | (shRawData[6] & 0x20); 

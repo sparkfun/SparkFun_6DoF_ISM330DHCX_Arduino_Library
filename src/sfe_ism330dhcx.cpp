@@ -1263,6 +1263,59 @@ bool QwDevISM330DHCX::readPeripheralSensor(uint8_t* shReg, uint8_t len)
 	return true;
 }
 
+bool QwDevISM330DHCX::getHubStatus()
+{
+
+	int32_t retVal;
+	ism330dhcx_status_master_t tempVal;
+
+	retVal = ism330dhcx_sh_status_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return false;
+
+	if( tempVal.sens_hub_endop == 1 )
+		return true;
+
+	return false; 
+}
+
+
+bool QwDevISM330DHCX::externalSensorNack(uint8_t sensor)
+{
+
+	int32_t retVal;
+	ism330dhcx_status_master_t tempVal;
+
+	retVal = ism330dhcx_sh_status_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return false;
+
+	switch( sensor ){
+		case 0:
+			if( tempVal.slave0_nack == 1 )
+				return true;
+			break;
+		case 1:
+			if( tempVal.slave1_nack == 1 )
+				return true;
+			break;
+		case 2:
+			if( tempVal.slave2_nack == 1 )
+				return true;
+			break;
+		case 3:
+			if( tempVal.slave3_nack == 1 )
+				return true;
+			break;
+		default:
+			return false;
+	}
+
+	return false; 
+}
+
 bool QwDevISM330DHCX::readMMCMagnetometer(uint8_t* magData, uint8_t len)
 {
 	int32_t retVal;
