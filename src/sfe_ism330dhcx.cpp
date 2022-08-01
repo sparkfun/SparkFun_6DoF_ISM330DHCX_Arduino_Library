@@ -1149,7 +1149,7 @@ bool QwDevISM330DHCX::setHubSensorRead(uint8_t sensor, sfe_hub_sensor_settings_t
 
 	tempSett.slv_add = settings->address; 
 	tempSett.slv_subadd = settings->subAddress; 
-	tempSett.slv_len = settings->length; 
+	tempSett.slv_len = settings->lenData; 
 
 
 	switch( sensor )
@@ -1177,6 +1177,18 @@ bool QwDevISM330DHCX::setHubSensorRead(uint8_t sensor, sfe_hub_sensor_settings_t
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubSensorWrite
+//
+// Gives settings to the 6DoF with regards to the address, register, and data to write to an external
+// sensor. 
+// 
+//  Parameter   Description
+//  ---------   -----------------------------
+//  settings    Struct containing the address, register, and data to write to the external sensor
+//
+
 bool QwDevISM330DHCX::setHubSensorWrite(sfe_hub_sensor_settings_t* settings)
 {
 	int32_t retVal;
@@ -1184,7 +1196,7 @@ bool QwDevISM330DHCX::setHubSensorWrite(sfe_hub_sensor_settings_t* settings)
 
 	tempSett.slv0_add = settings->address; 
 	tempSett.slv0_subadd = settings->subAddress; 
-	tempSett.slv0_data = settings->length; 
+	tempSett.slv0_data = settings->lenData; 
 
 	retVal = ism330dhcx_sh_cfg_write(&sfe_dev, &tempSett);
 
@@ -1263,6 +1275,13 @@ bool QwDevISM330DHCX::readPeripheralSensor(uint8_t* shReg, uint8_t len)
 	return true;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// getHubStatus
+//
+// Checks whether communication with the external sensor has concluded. 
+//	
+
 bool QwDevISM330DHCX::getHubStatus()
 {
 
@@ -1280,8 +1299,17 @@ bool QwDevISM330DHCX::getHubStatus()
 	return false; 
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// getExternalSensorNack
+//
+// Retrieves communication status when communicating with external sensor
+//	
+//  Parameter   Description
+//  ---------   -----------------------------
+//  sensor			The sensor to check, (0-3)
 
-bool QwDevISM330DHCX::externalSensorNack(uint8_t sensor)
+
+bool QwDevISM330DHCX::getExternalSensorNack(uint8_t sensor)
 {
 
 	int32_t retVal;
@@ -1401,6 +1429,16 @@ bool QwDevISM330DHCX::setHubFifoBatching(bool enable)
 	return true;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// setHubPullUps
+//
+// Enables/Disables internal pullups on SDX/SCX lines
+//	
+//  Parameter   Description
+//  ---------   -----------------------------
+//  enable			Enable/disables internal pullups on SDX/SCX lines 
+
 bool QwDevISM330DHCX::setHubPullUps(bool enable)
 {
 
@@ -1414,6 +1452,12 @@ bool QwDevISM330DHCX::setHubPullUps(bool enable)
 	return true; 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// resetSensorHub
+//
+// Resets all settings in the "Master Config" register
+//	
 
 bool QwDevISM330DHCX::resetSensorHub()
 {

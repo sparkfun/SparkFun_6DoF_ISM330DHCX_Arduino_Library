@@ -25,7 +25,7 @@ struct sfe_hub_sensor_settings_t
 {
 	uint8_t address;
 	uint8_t subAddress;
-	uint8_t length;
+	uint8_t lenData;
 };
 
 
@@ -140,7 +140,7 @@ class QwDevISM330DHCX
 		bool setHubFifoBatching(bool enable = true);
 		bool setHubPullUps(bool enable = true);
 		bool getHubStatus();
-		bool externalSensorNack(uint8_t sensor);
+		bool getExternalSensorNack(uint8_t sensor);
 		bool resetSensorHub();
 
 		// Self Test
