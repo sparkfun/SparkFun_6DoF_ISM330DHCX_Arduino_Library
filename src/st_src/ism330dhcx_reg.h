@@ -2829,21 +2829,21 @@ int32_t ism330dhcx_write_reg(stmdev_ctx_t *ctx, uint8_t reg,
                              uint8_t *data,
                              uint16_t len);
 
-float_t ism330dhcx_from_fs2g_to_mg(int16_t lsb);
-float_t ism330dhcx_from_fs4g_to_mg(int16_t lsb);
-float_t ism330dhcx_from_fs8g_to_mg(int16_t lsb);
-float_t ism330dhcx_from_fs16g_to_mg(int16_t lsb);
+float ism330dhcx_from_fs2g_to_mg(int16_t lsb);
+float ism330dhcx_from_fs4g_to_mg(int16_t lsb);
+float ism330dhcx_from_fs8g_to_mg(int16_t lsb);
+float ism330dhcx_from_fs16g_to_mg(int16_t lsb);
 
-float_t ism330dhcx_from_fs125dps_to_mdps(int16_t lsb);
-float_t ism330dhcx_from_fs250dps_to_mdps(int16_t lsb);
-float_t ism330dhcx_from_fs500dps_to_mdps(int16_t lsb);
-float_t ism330dhcx_from_fs1000dps_to_mdps(int16_t lsb);
-float_t ism330dhcx_from_fs2000dps_to_mdps(int16_t lsb);
-float_t ism330dhcx_from_fs4000dps_to_mdps(int16_t lsb);
+float ism330dhcx_from_fs125dps_to_mdps(int16_t lsb);
+float ism330dhcx_from_fs250dps_to_mdps(int16_t lsb);
+float ism330dhcx_from_fs500dps_to_mdps(int16_t lsb);
+float ism330dhcx_from_fs1000dps_to_mdps(int16_t lsb);
+float ism330dhcx_from_fs2000dps_to_mdps(int16_t lsb);
+float ism330dhcx_from_fs4000dps_to_mdps(int16_t lsb);
 
-float_t ism330dhcx_from_lsb_to_celsius(int16_t lsb);
+float ism330dhcx_from_lsb_to_celsius(int16_t lsb);
 
-float_t ism330dhcx_from_lsb_to_nsec(int32_t lsb);
+float ism330dhcx_from_lsb_to_nsec(int32_t lsb);
 
 typedef enum
 {
