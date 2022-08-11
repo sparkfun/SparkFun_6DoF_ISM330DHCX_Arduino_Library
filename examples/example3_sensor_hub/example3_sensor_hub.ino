@@ -1,23 +1,59 @@
+/*
+  example3-sensor_hub
+
+  This example demonstrates the "sensor hub" feature of the ISM330DHCX. 
+	The ISM330DHCX acts as a controller for external sensors connected to this 
+	alternate bus (SDX/SCX). In this example, the ISM330DHCX is connected to the
+	MMC5983MA Magnetometer. You might notice that we have a 9DoF with these two
+	parts but not in this configuration. The reason is that the magnetometer requires
+	an initiate measurement bit to be flipped before every reading, while this is
+	possible (it's demonstrated below) it's also not ideal for this setup. A more
+	ideal setup would be a sensor that is just turned on and data is pulled 
+	periodically.
+
+  Written by Elias Santistevan @ SparkFun Electronics, August 2022
+
+	Product:
+
+		6DoF: https://www.sparkfun.com/products/19764
+		9DoF: https://www.sparkfun.com/products/19895
+
+  Repository:
+
+		https://github.com/sparkfun/SparkFun_6DoF_ISM330DHCX_Arduino_Library
+
+  SparkFun code, firmware, and software is released under the MIT 
+	License	(http://opensource.org/licenses/MIT).
+*/
+
 #include <Wire.h>
 #include "SparkFun_ISM330DHCX.h"
 
-// 8 bit addressing for Sensor Hub
+// 8 bit addressing is required for the 6DoF
+// to communicate with its' external sensors.
 #define MAG_ADDR_READ 0x61 // (0x30 << 1) | 1)
 #define MAG_ADDR_WRITE 0x60 // (0x30 << 1)
 
 #define MAG_READ_REG 0x00 // Read from 0x00
 #define MAG_READ_LEN 0x07 // Read seven times consecutively
-#define MAG_WRITE_REG 0x09 // INT_CTRL0 - register to initiate measurements on Magnetometer
+
+// INT_CTRL0 (0x09) - contains the bit to initiate measurement. 
+// It must be written before each read and is cleared automatically.
+#define MAG_WRITE_REG 0x09 
 #define MAG_WRITE_DATA 0x01 // Value to write to INT_CTRL0 
 
 SparkFun_ISM330DHCX myISM; 
 
+// Structs for X,Y,Z data
 sfe_ism_data_t accelData; 
 sfe_ism_data_t gyroData; 
 
-// Settings for sensor hub
+// The settings for the sensor hub have three specific fields.
+// In addition there are different settings for reads and writes as
+// indicated above. 
 sfe_hub_sensor_settings_t readMMC, writeMMC;
 
+// Magnetometer data fields. 
 uint8_t shRawData[MAG_READ_LEN] = {};
 unsigned int magXVal; 
 unsigned int magYVal; 
@@ -30,10 +66,12 @@ double normalizedZ;
 void setup(){
 
 
+	// Sensor hub settings for writing to the magnetometer.
 	writeMMC.address = MAG_ADDR_WRITE; 
 	writeMMC.subAddress = MAG_WRITE_REG; 
 	writeMMC.lenData = MAG_WRITE_DATA; 
 
+	// Sensor hub settings for reading from the magnetometer.
 	readMMC.address = MAG_ADDR_READ; 
 	readMMC.subAddress = MAG_READ_REG; 
 	readMMC.lenData = MAG_READ_LEN; 
@@ -47,9 +85,12 @@ void setup(){
 		while(1);
 	}
 
+	// Reset the device and the sensor hub to default settings. 
+	// This is helpful if you're doing multiple uploads testing different settings. 
 	myISM.deviceReset();
 	myISM.resetSensorHub();
 
+	// Wait for it to finish reseting
 	while( !myISM.getDeviceReset() ){ 
 		delay(1);
 	} 
@@ -104,12 +145,16 @@ void loop(){
 		myISM.getAccel(&accelData);
 		myISM.getGyro(&gyroData);
 
+		// If you've given the 6DoF the wrong address for the external sensor, this
+		// bit will tell you. The zero argument is the external sensor to check (0-3).
 		if( myISM.getExternalSensorNack(0) )
 			Serial.println("MMC Nacked...");
 
+		// CHeck if the sensor hub is finished. 
 		if( myISM.getHubStatus() )
 		{
 
+			// Get the data stored in the 6DoF's registers. 
 			myISM.readPeripheralSensor(shRawData, (uint8_t)MAG_READ_LEN);
 
 			// Shift raw data
@@ -146,6 +191,7 @@ void loop(){
 			myISM.setHubSensorRead(0, &readMMC);
 			myISM.enableSensorI2C(true);
 
+			// Turn the accelerometer and gyrocope back on.
 			myISM.setAccelDataRate(ISM_XL_ODR_104Hz);
 			myISM.setGyroDataRate(ISM_GY_ODR_104Hz);
 
@@ -197,7 +243,6 @@ bool writeControlBit(sfe_hub_sensor_settings_t toWrite)
 
 	// Wait for write to complete
 	while( !myISM.getHubStatus() ){
-//		Serial.print(".");
 		delay(1);
 	}
 	
