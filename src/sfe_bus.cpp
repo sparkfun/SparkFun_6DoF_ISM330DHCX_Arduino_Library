@@ -346,7 +346,7 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
     _spiPort->beginTransaction(_sfeSPISettings);
 		// Signal communication start
 		digitalWrite(_cs, LOW);
-		// A leading zero must be added to transfer with register to indicate a "read"
+		// A leading "1" must be added to transfer with register to indicate a "read"
 		reg = (reg | SPI_READ);
     _spiPort->transfer(reg);
 
