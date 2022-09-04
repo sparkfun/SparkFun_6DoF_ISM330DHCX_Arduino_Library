@@ -664,6 +664,7 @@ uint8_t QwDevISM330DHCX::getBlockDataUpdate()
 	uint8_t tempVal;
 	int32_t retVal = ism330dhcx_block_data_update_get(&sfe_dev, &tempVal);
 
+	(void)retVal;
 	return tempVal; 
 }
 
@@ -1346,14 +1347,7 @@ bool QwDevISM330DHCX::getExternalSensorNack(uint8_t sensor)
 
 bool QwDevISM330DHCX::readMMCMagnetometer(uint8_t* magData, uint8_t len)
 {
-	int32_t retVal;
-
-	readPeripheralSensor(magData, len); 
-
-	if( retVal != 0 )
-		return false;
-
-	return true;
+	return(readPeripheralSensor(magData, len));
 }
 
 
@@ -1399,10 +1393,9 @@ bool QwDevISM330DHCX::setHubWriteMode(uint8_t config)
 bool QwDevISM330DHCX::setHubPassThrough(bool enable)
 {
 
-	int32_t retVal;
-	ism330dhcx_sh_pass_through_set(&sfe_dev, (uint8_t)enable);
+	int32_t retVal = ism330dhcx_sh_pass_through_set(&sfe_dev, (uint8_t)enable);
 
-	if( retVal != 0 );
+	if( retVal != 0 )
 		return false;
 
 	return true; 
