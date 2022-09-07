@@ -251,7 +251,7 @@ bool SfeSPI::init(uint8_t cs,  bool bInit)
 {
 
 		//If the transaction settings are not provided by the user they are built here.
-		SPISettings spiSettings = SPISettings(3000000, LSBFIRST, SPI_MODE3); 
+		SPISettings spiSettings = SPISettings(3000000, MSBFIRST, SPI_MODE3); 
 
 		//In addition of the port is not provided by the user, it defaults to SPI here. 
 		return init(SPI, spiSettings, cs, bInit);
@@ -346,7 +346,7 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
     _spiPort->beginTransaction(_sfeSPISettings);
 		// Signal communication start
 		digitalWrite(_cs, LOW);
-		// A leading zero must be added to transfer with register to indicate a "read"
+		// A leading "1" must be added to transfer with register to indicate a "read"
 		reg = (reg | SPI_READ);
     _spiPort->transfer(reg);
 
