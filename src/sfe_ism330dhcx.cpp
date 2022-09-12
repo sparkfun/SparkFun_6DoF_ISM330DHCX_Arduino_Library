@@ -993,7 +993,7 @@ bool QwDevISM330DHCX::setAccelStatustoInt1(bool enable)
 	if( retVal != 0 )
 		return false;
 
-	int1_route.int1_ctrl.int1_drdy_xl = enable;
+	int1_route.int1_ctrl.int1_drdy_xl = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
@@ -1022,7 +1022,7 @@ bool QwDevISM330DHCX::setAccelStatustoInt2(bool enable)
 	if( retVal != 0 )
 		return false;
 
-	int2_route.int2_ctrl.int2_drdy_xl = enable;
+	int2_route.int2_ctrl.int2_drdy_xl = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 
@@ -1050,7 +1050,7 @@ bool QwDevISM330DHCX::setGyroStatustoInt1(bool enable)
 	if( retVal != 0 )
 		return false;
 
-	int1_route.int1_ctrl.int1_drdy_g = enable;
+	int1_route.int1_ctrl.int1_drdy_g = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
@@ -1078,7 +1078,7 @@ bool QwDevISM330DHCX::setGyroStatustoInt2(bool enable)
 	if( retVal != 0 )
 		return false;
 
-	int2_route.int2_ctrl.int2_drdy_g = enable;
+	int2_route.int2_ctrl.int2_drdy_g = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 
