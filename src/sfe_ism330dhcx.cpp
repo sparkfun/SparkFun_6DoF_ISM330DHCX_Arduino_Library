@@ -981,13 +981,19 @@ bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 // Sends the accelerometer's data ready signal to interrupt one.
 //
 
-bool QwDevISM330DHCX::setAccelStatustoInt1()
+bool QwDevISM330DHCX::setAccelStatustoInt1(bool enable)
 {
 
 	int32_t retVal;
 
-	ism330dhcx_pin_int1_route_t int1_route; 
-	int1_route.int1_ctrl.int1_drdy_xl = 1;
+	ism330dhcx_pin_int1_route_t int1_route;
+
+	retVal = ism330dhcx_pin_int1_route_get(&sfe_dev, &int1_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int1_route.int1_ctrl.int1_drdy_xl = enable;
 	
 	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
@@ -1004,13 +1010,19 @@ bool QwDevISM330DHCX::setAccelStatustoInt1()
 // Sends the accelerometer's data ready signal to interrupt two.
 //
 
-bool QwDevISM330DHCX::setAccelStatustoInt2()
+bool QwDevISM330DHCX::setAccelStatustoInt2(bool enable)
 {
 
 	int32_t retVal;
 
 	ism330dhcx_pin_int2_route_t int2_route; 
-	int2_route.int2_ctrl.int2_drdy_xl = 1;
+
+	retVal = ism330dhcx_pin_int2_route_get(&sfe_dev, &int2_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int2_route.int2_ctrl.int2_drdy_xl = enable;
 	
 	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 
@@ -1026,13 +1038,19 @@ bool QwDevISM330DHCX::setAccelStatustoInt2()
 //
 // Sends the gyroscopes's data ready signal to interrupt one.
 //
-bool QwDevISM330DHCX::setGyroStatustoInt1()
+bool QwDevISM330DHCX::setGyroStatustoInt1(bool enable)
 {
 
 	int32_t retVal;
 
 	ism330dhcx_pin_int1_route_t int1_route; 
-	int1_route.int1_ctrl.int1_drdy_g = 1;
+
+	retVal = ism330dhcx_pin_int1_route_get(&sfe_dev, &int1_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int1_route.int1_ctrl.int1_drdy_g = enable;
 	
 	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
@@ -1048,13 +1066,19 @@ bool QwDevISM330DHCX::setGyroStatustoInt1()
 //
 // Sends the gyroscopes's data ready signal to interrupt two.
 //
-bool QwDevISM330DHCX::setGyroStatustoInt2()
+bool QwDevISM330DHCX::setGyroStatustoInt2(bool enable)
 {
 
 	int32_t retVal;
 
 	ism330dhcx_pin_int2_route_t int2_route; 
-	int2_route.int2_ctrl.int2_drdy_g = 1;
+
+	retVal = ism330dhcx_pin_int2_route_get(&sfe_dev, &int2_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int2_route.int2_ctrl.int2_drdy_g = enable;
 	
 	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 

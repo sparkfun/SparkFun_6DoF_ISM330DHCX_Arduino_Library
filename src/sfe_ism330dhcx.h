@@ -112,10 +112,10 @@ class QwDevISM330DHCX
 		bool resetTimestamp();
 
 		// Interrupt Settings
-		bool setAccelStatustoInt1();
-		bool setAccelStatustoInt2();
-		bool setGyroStatustoInt1();
-		bool setGyroStatustoInt2();
+		bool setAccelStatustoInt1(bool enable = true);
+		bool setAccelStatustoInt2(bool enable = true);
+		bool setGyroStatustoInt1(bool enable = true);
+		bool setGyroStatustoInt2(bool enable = true);
 		bool setIntNotification(uint8_t val);
 		bool setDataReadyMode(uint8_t val);
 		bool setPinMode(bool openDrain = true);
