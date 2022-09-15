@@ -934,12 +934,20 @@ bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
 //  openDrain   Set true for active low and false for active high
 //
 
-bool QwDevISM330DHCX::setPinMode(bool openDrain )
+bool QwDevISM330DHCX::setPinMode(bool activeLow )
 {
 	int32_t retVal;
 
-	//0 = push-pull, active high, 1 = open-drain, active low
-	retVal = ism330dhcx_pin_mode_set(&sfe_dev, (ism330dhcx_pp_od_t)openDrain);
+	//0 = active high :  active low, 1  
+	retVal = ism330dhcx_pin_polarity_set(&sfe_dev, (ism330dhcx_h_lactive_t)activeLow);
+
+	if( retVal != 0 )
+		return false;
+	
+	if( activeLow )
+		// pinmode must be set to push-pull when active low is set.
+		// See section 9.14 on pg 51 of datasheet for more information
+		retVal = ism330dhcx_pin_mode_set(&sfe_dev, (ism330dhcx_pp_od_t)0);
 
 	if( retVal != 0 )
 		return false;

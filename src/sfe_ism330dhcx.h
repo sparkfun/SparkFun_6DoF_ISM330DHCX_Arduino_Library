@@ -118,7 +118,7 @@ class QwDevISM330DHCX
 		bool setGyroStatustoInt2(bool enable = true);
 		bool setIntNotification(uint8_t val);
 		bool setDataReadyMode(uint8_t val);
-		bool setPinMode(bool openDrain = true);
+		bool setPinMode(bool activeLow = true);
 		
 		// FIFO Settings
 		bool setFifoWatermark(uint16_t val);
