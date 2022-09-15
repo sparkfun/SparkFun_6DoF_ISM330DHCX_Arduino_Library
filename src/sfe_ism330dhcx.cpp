@@ -934,12 +934,20 @@ bool QwDevISM330DHCX::setFifoTimestampDec(uint8_t val)
 //  openDrain   Set true for active low and false for active high
 //
 
-bool QwDevISM330DHCX::setPinMode(bool openDrain )
+bool QwDevISM330DHCX::setPinMode(bool activeLow )
 {
 	int32_t retVal;
 
-	//0 = push-pull, active high, 1 = open-drain, active low
-	retVal = ism330dhcx_pin_mode_set(&sfe_dev, (ism330dhcx_pp_od_t)openDrain);
+	//0 = active high :  active low, 1  
+	retVal = ism330dhcx_pin_polarity_set(&sfe_dev, (ism330dhcx_h_lactive_t)activeLow);
+
+	if( retVal != 0 )
+		return false;
+	
+	if( activeLow )
+		// pinmode must be set to push-pull when active low is set.
+		// See section 9.14 on pg 51 of datasheet for more information
+		retVal = ism330dhcx_pin_mode_set(&sfe_dev, (ism330dhcx_pp_od_t)0);
 
 	if( retVal != 0 )
 		return false;
@@ -981,13 +989,19 @@ bool QwDevISM330DHCX::setIntNotification(uint8_t val)
 // Sends the accelerometer's data ready signal to interrupt one.
 //
 
-bool QwDevISM330DHCX::setAccelStatustoInt1()
+bool QwDevISM330DHCX::setAccelStatustoInt1(bool enable)
 {
 
 	int32_t retVal;
 
-	ism330dhcx_pin_int1_route_t int1_route; 
-	int1_route.int1_ctrl.int1_drdy_xl = 1;
+	ism330dhcx_pin_int1_route_t int1_route;
+
+	retVal = ism330dhcx_pin_int1_route_get(&sfe_dev, &int1_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int1_route.int1_ctrl.int1_drdy_xl = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
@@ -1004,13 +1018,19 @@ bool QwDevISM330DHCX::setAccelStatustoInt1()
 // Sends the accelerometer's data ready signal to interrupt two.
 //
 
-bool QwDevISM330DHCX::setAccelStatustoInt2()
+bool QwDevISM330DHCX::setAccelStatustoInt2(bool enable)
 {
 
 	int32_t retVal;
 
 	ism330dhcx_pin_int2_route_t int2_route; 
-	int2_route.int2_ctrl.int2_drdy_xl = 1;
+
+	retVal = ism330dhcx_pin_int2_route_get(&sfe_dev, &int2_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int2_route.int2_ctrl.int2_drdy_xl = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 
@@ -1026,13 +1046,19 @@ bool QwDevISM330DHCX::setAccelStatustoInt2()
 //
 // Sends the gyroscopes's data ready signal to interrupt one.
 //
-bool QwDevISM330DHCX::setGyroStatustoInt1()
+bool QwDevISM330DHCX::setGyroStatustoInt1(bool enable)
 {
 
 	int32_t retVal;
 
 	ism330dhcx_pin_int1_route_t int1_route; 
-	int1_route.int1_ctrl.int1_drdy_g = 1;
+
+	retVal = ism330dhcx_pin_int1_route_get(&sfe_dev, &int1_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int1_route.int1_ctrl.int1_drdy_g = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int1_route_set(&sfe_dev, &int1_route);
 
@@ -1048,13 +1074,19 @@ bool QwDevISM330DHCX::setGyroStatustoInt1()
 //
 // Sends the gyroscopes's data ready signal to interrupt two.
 //
-bool QwDevISM330DHCX::setGyroStatustoInt2()
+bool QwDevISM330DHCX::setGyroStatustoInt2(bool enable)
 {
 
 	int32_t retVal;
 
 	ism330dhcx_pin_int2_route_t int2_route; 
-	int2_route.int2_ctrl.int2_drdy_g = 1;
+
+	retVal = ism330dhcx_pin_int2_route_get(&sfe_dev, &int2_route);
+
+	if( retVal != 0 )
+		return false;
+
+	int2_route.int2_ctrl.int2_drdy_g = (uint8_t)enable;
 	
 	retVal = ism330dhcx_pin_int2_route_set(&sfe_dev, &int2_route);
 
