@@ -1,6 +1,6 @@
 #include "sfe_ism_shim.h"
 #include "sfe_ism330dhcx.h"
-#include "st_src\ism330dhcx_reg.h"
+#include "st_src/ism330dhcx_reg.h"
 
 
 // Initializes the interfacing struct for STMicroelectronic's library. 

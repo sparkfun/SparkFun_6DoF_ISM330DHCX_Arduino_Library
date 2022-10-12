@@ -1,5 +1,5 @@
 #pragma once
-#include "st_src\ism330dhcx_reg.h"
+#include "st_src/ism330dhcx_reg.h"
 
 #ifdef __cpluplus
 extern "C"{
