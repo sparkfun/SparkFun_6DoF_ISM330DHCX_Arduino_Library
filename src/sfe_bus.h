@@ -46,9 +46,11 @@
 #pragma once
 
 
+
 #include <Wire.h>
 #include <SPI.h>
 
+namespace sfe_ISM330DHCX {
 
 // The following abstract class is used an interface for upstream implementation.
 class QwIDeviceBus 
@@ -120,3 +122,4 @@ class SfeSPI : public QwIDeviceBus
 		uint8_t _cs; 
 };
 
+};

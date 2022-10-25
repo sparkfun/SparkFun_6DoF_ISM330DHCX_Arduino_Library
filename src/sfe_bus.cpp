@@ -56,6 +56,7 @@ const static uint16_t kChunkSize = kMaxTransferBuffer;
 // Constructor
 //
 
+namespace sfe_ISM330DHCX {
 
 QwI2C::QwI2C(void) : _i2cPort{nullptr}
 {
@@ -359,5 +360,7 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
 		digitalWrite(_cs, HIGH);
     _spiPort->endTransaction();
 		return 0; 
+
+}
 
 }

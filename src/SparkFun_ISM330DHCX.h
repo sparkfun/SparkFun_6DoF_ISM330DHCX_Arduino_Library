@@ -60,7 +60,7 @@ class SparkFun_ISM330DHCX : public QwDevISM330DHCX
 	private: 
 
 		//I2C bus class
-		QwI2C _i2cBus; 
+		sfe_ISM330DHCX::QwI2C _i2cBus; 
 
 };
 	
@@ -121,6 +121,6 @@ class SparkFun_ISM330DHCX_SPI : public QwDevISM330DHCX
 		private:
 
 		// SPI bus class
-		SfeSPI _spiBus;
+		sfe_ISM330DHCX::SfeSPI _spiBus;
 
 };

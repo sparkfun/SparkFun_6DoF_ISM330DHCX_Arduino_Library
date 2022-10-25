@@ -55,7 +55,7 @@ bool QwDevISM330DHCX::isConnected()
 //  theBus       The communication bus object
 //  i2cAddress   I2C address for the 6DoF
 
-void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddress)
+void QwDevISM330DHCX::setCommunicationBus(sfe_ISM330DHCX::QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
     _sfeBus = &theBus;
 		_i2cAddress = i2cAddress; 
@@ -71,7 +71,7 @@ void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus, uint8_t i2cAddre
 //  theBus       The communication bus object
 //  
 
-void QwDevISM330DHCX::setCommunicationBus(QwIDeviceBus &theBus)
+void QwDevISM330DHCX::setCommunicationBus(sfe_ISM330DHCX::QwIDeviceBus &theBus)
 {
     _sfeBus = &theBus;
 }
