@@ -6,121 +6,135 @@
 
 class SparkFun_ISM330DHCX : public QwDevISM330DHCX
 {
+public:
 
-	public: 
+	SparkFun_ISM330DHCX() {};
+	/**
+	 * @brief      This method is called to initialize the ISM330DHCX library
+	 *             and connect to the ISM330DHCX device. This method must be
+	 *             called before calling any other method that interacts with
+	 *             the device.
+	 *
+	 *             Method 1: User skips passing in an I2C object which then
+	 *             defaults to Wire.
+	 *
+	 *             This method follows the standard startup pattern in SparkFun
+	 *             Arduino libraries.
+	 *
+	 * @param[in]  deviceAddress  I2C Address. If not provided, the default
+	 *                            address is used.
+	 *
+	 * @return     true on success, false on startup failure
+	 */
+	bool begin(uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
+	{
+			// Setup  I2C object and pass into the superclass
+			setCommunicationBus(_i2cBus, deviceAddress);
 
-		SparkFun_ISM330DHCX() {};
+			// Initialize the I2C buss class i.e. setup default Wire port
+			_i2cBus.init();
 
-    ///////////////////////////////////////////////////////////////////////
-    // begin()
-    //
-    // This method is called to initialize the ISM330DHCX library and connect to
-    // the ISM330DHCX device. This method must be called before calling any other method
-    // that interacts with the device.
-    //
-    // This method follows the standard startup pattern in SparkFun Arduino
-    // libraries.
-    //
-    //  Parameter   Description
-    //  ---------   ----------------------------
-    //  wirePort    optional. The Wire port. If not provided, the default port is used
-    //  address     optional. I2C Address. If not provided, the default address is used.
-    //  retval      true on success, false on startup failure
-    //
-    // This methond is overridden, implementing two versions.
-    //
-    // Version 1:
-    // User skips passing in an I2C object which then defaults to Wire.
-		bool begin(uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
-		{
-        // Setup  I2C object and pass into the superclass
-        setCommunicationBus(_i2cBus, deviceAddress);
+			// Initialize the system - return results
+			return this->QwDevISM330DHCX::init();
+	}
 
-				// Initialize the I2C buss class i.e. setup default Wire port
-        _i2cBus.init();
+	/**
+	 * @brief      This method is called to initialize the ISM330DHCX library
+	 *             and connect to the ISM330DHCX device. This method must be
+	 *             called before calling any other method that interacts with
+	 *             the device.
+	 *
+	 *             Method 2:  User passes in an I2C object and an address
+	 *             (optional).
+	 *
+	 *             This method follows the standard startup pattern in SparkFun
+	 *             Arduino libraries.
+	 *
+	 * @param      wirePort       The wire port
+	 * @param[in]  deviceAddress  I2C Address. If not provided, the default
+	 *                            address is used.
+	 *
+	 * @return     true on success, false on startup failure
+	 */
+	bool begin(TwoWire &wirePort, uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
+	{
+			// Setup  I2C object and pass into the superclass
+			setCommunicationBus(_i2cBus, deviceAddress);
 
-        // Initialize the system - return results
-        return this->QwDevISM330DHCX::init();
-		}
+			// Give the I2C port provided by the user to the I2C bus class.
+			_i2cBus.init(wirePort, true);
 
-		//Version 2:
-    // User passes in an I2C object and an address (optional).
-    bool begin(TwoWire &wirePort, uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
-    {
-        // Setup  I2C object and pass into the superclass
-        setCommunicationBus(_i2cBus, deviceAddress);
+			// Initialize the system - return results
+			return this->QwDevISM330DHCX::init();
+	}
 
-				// Give the I2C port provided by the user to the I2C bus class.
-        _i2cBus.init(wirePort, true);
+private:
 
-        // Initialize the system - return results
-        return this->QwDevISM330DHCX::init();
-    }
-
-	private: 
-
-		//I2C bus class
-		sfe_ISM330DHCX::QwI2C _i2cBus; 
+	//I2C bus class
+	sfe_ISM330DHCX::QwI2C _i2cBus;
 
 };
-	
+
 class SparkFun_ISM330DHCX_SPI : public QwDevISM330DHCX
 {
-		public:
+public:
 
-		SparkFun_ISM330DHCX_SPI() {};
+	SparkFun_ISM330DHCX_SPI() {};
 
-    ///////////////////////////////////////////////////////////////////////
-    // begin()
-    //
-    // This method is called to initialize the ISM330DHCX library and connect to
-    // the ISM330DHCX device. This method must be called before calling any other method
-    // that interacts with the device.
-    //
-    // This method follows the standard startup pattern in SparkFun Arduino
-    // libraries.
-    //
-    //  Parameter   Description
-    //  ---------   ----------------------------
-    //  spiPort     optional. The SPI port. If not provided, the default port is used
-    //  SPISettings optional. SPI "transaction" settings are need for every data transfer. 
-		//												Default used if not provided.
-    //  Chip Select mandatory. The chip select pin ("CS") can't be guessed, so must be provided.
-    //  retval      true on success, false on startup failure
-    //
-    // This methond is overridden, implementing two versions.
-    //
-    // Version 1:
-    // User skips passing in an SPI object which then defaults to SPI.
 
-    bool begin(uint8_t cs)
-    {
-        // Setup a SPI object and pass into the superclass
-        setCommunicationBus(_spiBus);
+	/**
+	 * @brief      This method is called to initialize the ISM330DHCX library
+	 *             and connect to the ISM330DHCX device. This method must be
+	 *             called before calling any other method that interacts with
+	 *             the device.
+	 *
+	 * @param[in]  cs    Pin number connected to the cs pin
+	 *
+	 * @return    true on success, false on startup failure
+	 */
+	bool begin(uint8_t cs)
+	{
+			// Setup a SPI object and pass into the superclass
+			setCommunicationBus(_spiBus);
 
-				// Initialize the SPI bus class with the chip select pin, SPI port defaults to SPI, 
-				// and SPI settings are set to class defaults.
-        _spiBus.init(cs, true);
+			// Initialize the SPI bus class with the chip select pin, SPI port
+			// defaults to SPI, and SPI settings are set to class defaults.
+			_spiBus.init(cs, true);
 
-        // Initialize the system - return results
-        return this->QwDevISM330DHCX::init();
-    }
+			// Initialize the system - return results
+			return this->QwDevISM330DHCX::init();
+	}
 
-    bool begin(SPIClass &spiPort, SPISettings ismSettings, uint8_t cs)
-    {
-        // Setup a SPI object and pass into the superclass
-        setCommunicationBus(_spiBus);
 
-				// Initialize the SPI bus class with provided SPI port, SPI setttings, and chip select pin.
-        _spiBus.init(spiPort, ismSettings, cs, true);
+	/**
+	 * @brief      This method is called to initialize the ISM330DHCX library
+	 *             and connect to the ISM330DHCX device. This method must be
+	 *             called before calling any other method that interacts with
+	 *             the device.
+	 *
+	 * @param      spiPort      The SPI port.
+	 * @param[in]  ismSettings  SPI "transaction" settings are need for every
+	 *                          data transfer.
+	 * @param[in]  cs           Pin number connected to the cs pin
+	 *
+	 * @return     true on success, false on startup failure
+	 */
+	bool begin(SPIClass &spiPort, const SPISettings& ismSettings, uint8_t cs)
+	{
+			// Setup a SPI object and pass into the superclass
+			setCommunicationBus(_spiBus);
 
-        // Initialize the system - return results
-        return this->QwDevISM330DHCX::init();
-    }
+			// Initialize the SPI bus class with provided SPI port, SPI settings,
+			// and chip select pin.
+			_spiBus.init(spiPort, ismSettings, cs, true);
 
-		private:
+			// Initialize the system - return results
+			return this->QwDevISM330DHCX::init();
+	}
 
-		// SPI bus class
-		sfe_ISM330DHCX::SfeSPI _spiBus;
+private:
+
+	// SPI bus class
+	sfe_ISM330DHCX::SfeSPI _spiBus;
 
 };
