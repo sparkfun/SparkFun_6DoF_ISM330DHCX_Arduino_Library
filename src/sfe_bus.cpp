@@ -71,16 +71,16 @@ QwI2C::QwI2C(void) : _i2cPort{nullptr}
 bool QwI2C::init(TwoWire &wirePort, bool bInit)
 {
 
-    // if we don't have a wire port already
-    if( !_i2cPort )
-    {
-        _i2cPort = &wirePort;
+	// if we don't have a wire port already
+	if( !_i2cPort )
+	{
+		_i2cPort = &wirePort;
 
-        if( bInit )
-            _i2cPort->begin();
-    }
-		
-    return true;
+		if( bInit )
+			_i2cPort->begin();
+	}
+
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,10 +90,10 @@ bool QwI2C::init(TwoWire &wirePort, bool bInit)
 // will use the default
 bool QwI2C::init()
 {
-		if( !_i2cPort )
-			return init(Wire);
-		else
-			return false;
+	if( !_i2cPort )
+		return init(Wire);
+	else
+		return false;
 }
 
 
@@ -105,11 +105,11 @@ bool QwI2C::init()
 bool QwI2C::ping(uint8_t i2c_address)
 {
 
-    if( !_i2cPort )
-        return false;
+	if( !_i2cPort )
+		return false;
 
-    _i2cPort->beginTransmission(i2c_address);
-    return _i2cPort->endTransmission() == 0;
+	_i2cPort->beginTransmission(i2c_address);
+	return _i2cPort->endTransmission() == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,13 +120,13 @@ bool QwI2C::ping(uint8_t i2c_address)
 bool QwI2C::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataToWrite)
 {
 
-    if (!_i2cPort)
-        return false;
+	if (!_i2cPort)
+		return false;
 
-    _i2cPort->beginTransmission(i2c_address);
-    _i2cPort->write(offset);
-    _i2cPort->write(dataToWrite);
-    return _i2cPort->endTransmission() == 0;
+	_i2cPort->beginTransmission(i2c_address);
+	_i2cPort->write(offset);
+	_i2cPort->write(dataToWrite);
+	return _i2cPort->endTransmission() == 0;
 }
 
 
@@ -139,11 +139,11 @@ bool QwI2C::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataT
 int QwI2C::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
 {
 
-    _i2cPort->beginTransmission(i2c_address);
-    _i2cPort->write(offset);
-    _i2cPort->write(data, (int)length);
+	_i2cPort->beginTransmission(i2c_address);
+	_i2cPort->write(offset);
+	_i2cPort->write(data, (int)length);
 
-    return _i2cPort->endTransmission() ? -1 : 0; // -1 = error, 0 = success
+	return _i2cPort->endTransmission() ? -1 : 0; // -1 = error, 0 = success
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,48 +156,48 @@ int QwI2C::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_
 //
 int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
 {
-    uint8_t nChunk;
-    uint16_t nReturned;
+	uint8_t nChunk;
+	uint16_t nReturned;
 
-    if (!_i2cPort)
-        return -1;
+	if (!_i2cPort)
+		return -1;
 
-    int i;                   // counter in loop
-    bool bFirstInter = true; // Flag for first iteration - used to send register
+	unsigned int i;          // counter in loop
+	bool bFirstInter = true; // Flag for first iteration - used to send register
 
-    while (numBytes > 0)
-    {
-        _i2cPort->beginTransmission(addr);
+	while (numBytes > 0)
+	{
+		_i2cPort->beginTransmission(addr);
 
-        if (bFirstInter)
-        {
-            _i2cPort->write(reg);
-            bFirstInter = false;
-        }
+		if (bFirstInter)
+		{
+			_i2cPort->write(reg);
+			bFirstInter = false;
+		}
 
-        if (_i2cPort->endTransmission() != 0)
-            return -1; // error with the end transmission
+		if (_i2cPort->endTransmission() != 0)
+			return -1; // error with the end transmission
 
-        // We're chunking in data - keeping the max chunk to kMaxI2CBufferLength
-        nChunk = numBytes > kChunkSize ? kChunkSize : numBytes;
+		// We're chunking in data - keeping the max chunk to kMaxI2CBufferLength
+		nChunk = numBytes > kChunkSize ? kChunkSize : numBytes;
 
-        nReturned = _i2cPort->requestFrom((int)addr, (int)nChunk, (int)true);
+		nReturned = _i2cPort->requestFrom((int)addr, (int)nChunk, (int)true);
 
-        // No data returned, no dice
-        if (nReturned == 0)
-            return -1; // error
+		// No data returned, no dice
+		if (nReturned == 0)
+			return -1; // error
 
-        // Copy the retrieved data chunk to the current index in the data segment
-        for (i = 0; i < nReturned; i++){
-            *data++ = _i2cPort->read();
-				}
+		// Copy the retrieved data chunk to the current index in the data segment
+		for (i = 0; i < nReturned; i++){
+			*data++ = _i2cPort->read();
+		}
 
-        // Decrement the amount of data recieved from the overall data request amount
-        numBytes = numBytes - nReturned;
+		// Decrement the amount of data recieved from the overall data request amount
+		numBytes = numBytes - nReturned;
 
-    } // end while
+	} // end while
 
-    return 0; // Success
+	return 0; // Success
 }
 
 
@@ -217,30 +217,30 @@ SfeSPI::SfeSPI(void) : _spiPort{nullptr}
 // will use the default
 
 
-bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit)
+bool SfeSPI::init(SPIClass &spiPort, const SPISettings& ismSPISettings, uint8_t cs,  bool bInit)
 {
 
-    // if we don't have a SPI port already
-    if( !_spiPort )
-    {
-        _spiPort = &spiPort;
+	// if we don't have a SPI port already
+	if( !_spiPort )
+	{
+		_spiPort = &spiPort;
 
-        if( bInit )
-            _spiPort->begin();
-    }
+		if( bInit )
+			_spiPort->begin();
+	}
 
 
-		// SPI settings are needed for every transaction
-		_sfeSPISettings = ismSPISettings; 
+	// SPI settings are needed for every transaction
+	_sfeSPISettings = ismSPISettings;
 
-		// The chip select pin can vary from platform to platform and project to project
-		// and so it must be given by the user. 
-		if( !cs )
-			return false; 
-		
-		_cs = cs;
+	// The chip select pin can vary from platform to platform and project to project
+	// and so it must be given by the user.
+	if( !cs )
+		return false;
 
-    return true;
+	_cs = cs;
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,11 +251,11 @@ bool SfeSPI::init(SPIClass &spiPort, SPISettings& ismSPISettings, uint8_t cs,  b
 bool SfeSPI::init(uint8_t cs,  bool bInit)
 {
 
-		//If the transaction settings are not provided by the user they are built here.
-		SPISettings spiSettings = SPISettings(3000000, MSBFIRST, SPI_MODE3); 
+	//If the transaction settings are not provided by the user they are built here.
+	SPISettings spiSettings = SPISettings(3000000, MSBFIRST, SPI_MODE3);
 
-		//In addition of the port is not provided by the user, it defaults to SPI here. 
-		return init(SPI, spiSettings, cs, bInit);
+	//In addition of the port is not provided by the user, it defaults to SPI here.
+	return init(SPI, spiSettings, cs, bInit);
 
 }
 
@@ -270,6 +270,9 @@ bool SfeSPI::init(uint8_t cs,  bool bInit)
 
 bool SfeSPI::ping(uint8_t i2c_address)
 {
+	// Make compiler understand we don't use this variable, and do not print
+	// warning.
+	(void)i2c_address;
 	return true;
 }
 
@@ -280,23 +283,25 @@ bool SfeSPI::ping(uint8_t i2c_address)
 
 bool SfeSPI::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t dataToWrite)
 {
+	// Make compiler understand we don't use this variable, and do not print
+	// warning.
+	(void)i2c_address;
+	if( !_spiPort )
+		return false;
 
-    if( !_spiPort )
-        return false;
+	// Apply settings
+	_spiPort->beginTransaction(_sfeSPISettings);
+	// Signal communication start
+	digitalWrite(_cs, LOW);
 
-		// Apply settings
-    _spiPort->beginTransaction(_sfeSPISettings);
-		// Signal communication start
-		digitalWrite(_cs, LOW);
+	_spiPort->transfer(offset);
+	_spiPort->transfer(dataToWrite);
 
-    _spiPort->transfer(offset);
-    _spiPort->transfer(dataToWrite);
+	// End communcation
+	digitalWrite(_cs, HIGH);
+	_spiPort->endTransaction();
 
-		// End communcation
-		digitalWrite(_cs, HIGH);
-    _spiPort->endTransaction();
-
-		return true;
+	return true;
 }
 
 
@@ -307,24 +312,26 @@ bool SfeSPI::writeRegisterByte(uint8_t i2c_address, uint8_t offset, uint8_t data
 
 int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8_t *data, uint16_t length)
 {
+	// Make compiler understand we don't use this variable, and do not print
+	// warning.
+	(void)i2c_address;
+	unsigned int i;
 
-		int i;
+	// Apply settings
+	_spiPort->beginTransaction(_sfeSPISettings);
+	// Signal communication start
+	digitalWrite(_cs, LOW);
+	_spiPort->transfer(offset);
 
-		// Apply settings
-    _spiPort->beginTransaction(_sfeSPISettings);
-		// Signal communication start
-		digitalWrite(_cs, LOW);
-    _spiPort->transfer(offset);
+	for(i = 0; i < length; i++)
+	{
+		_spiPort->transfer(*data++);
+	}
 
-		for(i = 0; i < length; i++)
-		{
-			_spiPort->transfer(*data++);
-		}
-
-		// End communication
-		digitalWrite(_cs, HIGH);
-    _spiPort->endTransaction();
-		return 0; 
+	// End communication
+	digitalWrite(_cs, HIGH);
+	_spiPort->endTransaction();
+	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,28 +345,31 @@ int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8
 
 int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t numBytes)
 {
-    if (!_spiPort)
-        return -1;
+	// Make compiler understand we don't use this variable, and do not print
+	// warning.
+	(void)addr;
+	if (!_spiPort)
+		return -1;
 
-    int i; // counter in loop
+	unsigned int i; // counter in loop
 
-		// Apply settings
-    _spiPort->beginTransaction(_sfeSPISettings);
-		// Signal communication start
-		digitalWrite(_cs, LOW);
-		// A leading "1" must be added to transfer with register to indicate a "read"
-		reg = (reg | SPI_READ);
-    _spiPort->transfer(reg);
+	// Apply settings
+	_spiPort->beginTransaction(_sfeSPISettings);
+	// Signal communication start
+	digitalWrite(_cs, LOW);
+	// A leading "1" must be added to transfer with register to indicate a "read"
+	reg = (reg | SPI_READ);
+	_spiPort->transfer(reg);
 
-		for(i = 0; i < numBytes; i++)
-		{
-			*data++ = _spiPort->transfer(0x00);
-		}
+	for(i = 0; i < numBytes; i++)
+	{
+		*data++ = _spiPort->transfer(0x00);
+	}
 
-		// End transaction
-		digitalWrite(_cs, HIGH);
-    _spiPort->endTransaction();
-		return 0; 
+	// End transaction
+	digitalWrite(_cs, HIGH);
+	_spiPort->endTransaction();
+	return 0;
 
 }
 

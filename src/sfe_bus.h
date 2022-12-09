@@ -67,8 +67,9 @@ class QwIDeviceBus
 
 };
 
-// The QwI2C device defines behavior for I2C implementation based around the TwoWire class (Wire).
-// This is Arduino specific. 
+// The QwI2C device defines behavior for I2C implementation based around the
+// TwoWire class (Wire). This is Arduino specific.
+//
 class QwI2C : public QwIDeviceBus
 {
 	public: 
@@ -92,10 +93,11 @@ class QwI2C : public QwIDeviceBus
     TwoWire* _i2cPort;
 };
 
-// The SfeSPI class defines behavior for SPI implementation based around the SPIClass class (SPI).
-// This is Arduino specific. 
-// Paramaters like "address" are kept although irrelevant to SPI due to the use of the abstract class
-// as interface, QwIDeviceBus.
+// The SfeSPI class defines behavior for SPI implementation based around the
+// SPIClass class (SPI). This is Arduino specific. Paramaters like "address" are
+// kept although irrelevant to SPI due to the use of the abstract class as
+// interface, QwIDeviceBus.
+//
 class SfeSPI : public QwIDeviceBus
 {
 	public:
@@ -104,7 +106,7 @@ class SfeSPI : public QwIDeviceBus
 
 		bool init(uint8_t cs, bool bInit=false);
 
-		bool init(SPIClass& spiPort, SPISettings& ismSPISettings, uint8_t cs,  bool bInit=false);
+		bool init(SPIClass& spiPort, const SPISettings& ismSPISettings, uint8_t cs,  bool bInit=false);
 
 		bool ping(uint8_t address);
 
