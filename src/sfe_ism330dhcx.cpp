@@ -535,14 +535,14 @@ bool QwDevISM330DHCX::getDeviceReset()
 // 
 //  Parameter   Description
 //  ---------   -----------------------------
-//  val         This parameter determines the intensity of the filter - (0-7) 
+//  val         This parameter determines the intensity of the filter - (0x00 - 0x37) 
 //
 // See sfe_ism330dhcx_defs.h for a list of valid arguments
 
 bool QwDevISM330DHCX::setAccelSlopeFilter(uint8_t val)
 {
 	int32_t retVal;
-	if( val > 7 )
+	if( val > 0x37 )
 		return false;
 
 	retVal = ism330dhcx_xl_hp_path_on_out_set(&sfe_dev,
