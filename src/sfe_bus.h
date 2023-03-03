@@ -52,7 +52,11 @@
 
 namespace sfe_ISM330DHCX {
 
-// The following abstract class is used an interface for upstream implementation.
+/**
+ * @brief      This class describes a QwI2C device bus.
+ *
+ *             Used as an base interface for upstream implementation.
+ */
 class QwIDeviceBus 
 {
 	public: 
@@ -67,9 +71,12 @@ class QwIDeviceBus
 
 };
 
-// The QwI2C device defines behavior for I2C implementation based around the
-// TwoWire class (Wire). This is Arduino specific.
-//
+/**
+ * @brief      This class describes a QwI2C
+ *
+ *             defines behavior for I2C implementation based around the TwoWire
+ *             class (Wire). This is Arduino specific
+ */
 class QwI2C : public QwIDeviceBus
 {
 	public: 
@@ -93,11 +100,14 @@ class QwI2C : public QwIDeviceBus
     TwoWire* _i2cPort;
 };
 
-// The SfeSPI class defines behavior for SPI implementation based around the
-// SPIClass class (SPI). This is Arduino specific. Paramaters like "address" are
-// kept although irrelevant to SPI due to the use of the abstract class as
-// interface, QwIDeviceBus.
-//
+/**
+ * @brief      This class describes a sfe spi.
+ *
+ *             Defines behavior for SPI implementation based around the SPIClass
+ *             class (SPI). This is Arduino specific. Paramaters like "address"
+ *             are kept although irrelevant to SPI due to the use of the
+ *             abstract class as interface, QwIDeviceBus.
+ */
 class SfeSPI : public QwIDeviceBus
 {
 	public:

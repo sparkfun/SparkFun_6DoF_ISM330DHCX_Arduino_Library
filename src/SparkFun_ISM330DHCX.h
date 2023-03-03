@@ -28,14 +28,14 @@ public:
 	 */
 	bool begin(uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
 	{
-			// Setup  I2C object and pass into the superclass
-			setCommunicationBus(_i2cBus, deviceAddress);
+		// Setup  I2C object and pass into the superclass
+		setCommunicationBus(_i2cBus, deviceAddress);
 
-			// Initialize the I2C buss class i.e. setup default Wire port
-			_i2cBus.init();
+		// Initialize the I2C buss class i.e. setup default Wire port
+		_i2cBus.init();
 
-			// Initialize the system - return results
-			return this->QwDevISM330DHCX::init();
+		// Initialize the system - return results
+		return this->QwDevISM330DHCX::init();
 	}
 
 	/**
@@ -58,14 +58,14 @@ public:
 	 */
 	bool begin(TwoWire &wirePort, uint8_t deviceAddress = ISM330DHCX_ADDRESS_HIGH)
 	{
-			// Setup  I2C object and pass into the superclass
-			setCommunicationBus(_i2cBus, deviceAddress);
+		// Setup  I2C object and pass into the superclass
+		setCommunicationBus(_i2cBus, deviceAddress);
 
-			// Give the I2C port provided by the user to the I2C bus class.
-			_i2cBus.init(wirePort, true);
+		// Give the I2C port provided by the user to the I2C bus class.
+		_i2cBus.init(wirePort, true);
 
-			// Initialize the system - return results
-			return this->QwDevISM330DHCX::init();
+		// Initialize the system - return results
+		return this->QwDevISM330DHCX::init();
 	}
 
 private:
@@ -90,19 +90,19 @@ public:
 	 *
 	 * @param[in]  cs    Pin number connected to the cs pin
 	 *
-	 * @return    true on success, false on startup failure
+	 * @return     true on success, false on startup failure
 	 */
 	bool begin(uint8_t cs)
 	{
-			// Setup a SPI object and pass into the superclass
-			setCommunicationBus(_spiBus);
+		// Setup a SPI object and pass into the superclass
+		setCommunicationBus(_spiBus);
 
-			// Initialize the SPI bus class with the chip select pin, SPI port
-			// defaults to SPI, and SPI settings are set to class defaults.
-			_spiBus.init(cs, true);
+		// Initialize the SPI bus class with the chip select pin, SPI port
+		// defaults to SPI, and SPI settings are set to class defaults.
+		_spiBus.init(cs, true);
 
-			// Initialize the system - return results
-			return this->QwDevISM330DHCX::init();
+		// Initialize the system - return results
+		return this->QwDevISM330DHCX::init();
 	}
 
 
@@ -121,15 +121,15 @@ public:
 	 */
 	bool begin(SPIClass &spiPort, const SPISettings& ismSettings, uint8_t cs)
 	{
-			// Setup a SPI object and pass into the superclass
-			setCommunicationBus(_spiBus);
+		// Setup a SPI object and pass into the superclass
+		setCommunicationBus(_spiBus);
 
-			// Initialize the SPI bus class with provided SPI port, SPI settings,
-			// and chip select pin.
-			_spiBus.init(spiPort, ismSettings, cs, true);
+		// Initialize the SPI bus class with provided SPI port, SPI settings,
+		// and chip select pin.
+		_spiBus.init(spiPort, ismSettings, cs, true);
 
-			// Initialize the system - return results
-			return this->QwDevISM330DHCX::init();
+		// Initialize the system - return results
+		return this->QwDevISM330DHCX::init();
 	}
 
 private:

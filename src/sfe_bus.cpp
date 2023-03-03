@@ -162,7 +162,7 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
 	if (!_i2cPort)
 		return -1;
 
-	unsigned int i;          // counter in loop
+	uint16_t i;                   // counter in loop
 	bool bFirstInter = true; // Flag for first iteration - used to send register
 
 	while (numBytes > 0)
@@ -190,7 +190,7 @@ int QwI2C::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_t
 		// Copy the retrieved data chunk to the current index in the data segment
 		for (i = 0; i < nReturned; i++){
 			*data++ = _i2cPort->read();
-		}
+				}
 
 		// Decrement the amount of data recieved from the overall data request amount
 		numBytes = numBytes - nReturned;
@@ -315,7 +315,7 @@ int SfeSPI::writeRegisterRegion(uint8_t i2c_address, uint8_t offset, const uint8
 	// Make compiler understand we don't use this variable, and do not print
 	// warning.
 	(void)i2c_address;
-	unsigned int i;
+	uint16_t i;
 
 	// Apply settings
 	_spiPort->beginTransaction(_sfeSPISettings);
@@ -351,7 +351,7 @@ int SfeSPI::readRegisterRegion(uint8_t addr, uint8_t reg, uint8_t *data, uint16_
 	if (!_spiPort)
 		return -1;
 
-	unsigned int i; // counter in loop
+	uint16_t i; // counter in loop
 
 	// Apply settings
 	_spiPort->beginTransaction(_sfeSPISettings);
