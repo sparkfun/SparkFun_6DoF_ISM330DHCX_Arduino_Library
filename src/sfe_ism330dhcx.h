@@ -86,6 +86,7 @@ class QwDevISM330DHCX
 		bool setAccelFullScale(uint8_t val);
 		bool setGyroFullScale(uint8_t val);
 		uint8_t getAccelFullScale();
+		uint8_t getGyroFullScale();
 
 		uint8_t getUniqueId();
 

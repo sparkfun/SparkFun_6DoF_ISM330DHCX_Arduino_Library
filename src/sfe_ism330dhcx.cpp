@@ -185,6 +185,23 @@ uint8_t QwDevISM330DHCX::getAccelFullScale()
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// getGyroFullScale()
+//
+// Retrieves the scale of the gyroscope's readings
+//
+
+uint8_t QwDevISM330DHCX::getGyroFullScale()
+{
+	ism330dhcx_fs_g_t val;
+	int32_t retVal = ism330dhcx_gy_full_scale_get(&sfe_dev, &val);
+
+	if( retVal != 0 )
+		return -1;
+
+	return (uint8_t)val;
+}
+
+//////////////////////////////////////////////////////////////////////////////
 // getUniqueId()
 //
 // Retrieves the the device's ID: 0x6B for the ISM330DHCX
