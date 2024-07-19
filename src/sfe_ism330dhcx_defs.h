@@ -100,8 +100,8 @@
 #define ISM_XL_BATCH_AT_833Hz    0x07
 #define ISM_XL_BATCH_AT_1667Hz   0x08
 #define ISM_XL_BATCH_AT_3333Hz   0x09
-#define ISM_XL_BATCH_AT_6667Hz   0x010
-#define ISM_XL_BATCH_6Hz5        0x011
+#define ISM_XL_BATCH_AT_6667Hz   0x0A
+#define ISM_XL_BATCH_6Hz5        0x0B
 
 //FIFO Gyroscope Batch Settings
 #define ISM_GY_NOT_BATCHED      0x00
@@ -114,8 +114,8 @@
 #define ISM_GY_BATCH_AT_833Hz    0x07
 #define ISM_GY_BATCH_AT_1667Hz   0x08
 #define ISM_GY_BATCH_AT_3333Hz   0x09
-#define ISM_GY_BATCH_AT_6667Hz   0x010
-#define ISM_GY_BATCH_6Hz5        0x011
+#define ISM_GY_BATCH_AT_6667Hz   0x0A
+#define ISM_GY_BATCH_6Hz5        0x0B
 
 //Decimation rate
 #define ISM_NO_DECIMATION 0x00
